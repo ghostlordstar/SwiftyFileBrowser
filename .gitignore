@@ -2,6 +2,15 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+## idea
+.idea/
+
+## bash
+.bash_profile
+
+## macOS 
+.DS_Store 
+
 ## User settings
 xcuserdata/
 
@@ -54,8 +63,9 @@ playground.xcworkspace
 # you should judge for yourself, the pros and cons are mentioned at:
 # https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
 #
-# Pods/
-#
+Pods/
+Podfile.lock
+
 # Add this line if you want to avoid checking in source code from the Xcode workspace
 # *.xcworkspace
 
