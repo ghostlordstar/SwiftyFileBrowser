@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'SwiftyFileBrowser_Example' do
+  pod 'SwiftyFileBrowser', :path => '../'
+
+  target 'SwiftyFileBrowser_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
