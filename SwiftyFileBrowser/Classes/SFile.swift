@@ -22,6 +22,7 @@ public enum SFileType {
     case zip(format: String?)
     case html
     case pdf
+    case unknow
 }
 
 public protocol SFile {

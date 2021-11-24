@@ -1,13 +1,13 @@
 //
-//  SFileDetailListView.swift
+//  SFileIconsListView.swift
 //  SwiftyFileBrowser
 //
-//  Created by b612 on 2021/11/24.
+//  Created by walker on 2021/11/24.
 //
 
 import UIKit
 
-class SFileDetailListView: UIView {
+class SFileIconsListView: UIView {
 
     /*
     // Only override draw() if you perform custom drawing.
