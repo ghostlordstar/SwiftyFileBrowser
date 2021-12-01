@@ -52,6 +52,16 @@ class SFileDetailListView: UIView {
             }
         }
     }
+    
+    func currentVisibleIndexPath() -> [IndexPath]? {
+        return self.listView.indexPathsForVisibleRows;
+    }
+    
+    func scrollToVisibleIndexPath(indexPath: IndexPath?, animated: Bool = false) {
+        if let indexPath = indexPath {
+            self.listView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.none, animated: animated)
+        }
+    }
 }
 
 extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
@@ -65,7 +75,9 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let file = self.filesDataSource[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "SFileDetailCell", for: indexPath)
+        cell.textLabel?.text = file.fileName
         return cell
     }
 }

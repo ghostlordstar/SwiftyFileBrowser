@@ -15,6 +15,7 @@ public enum SFileBrowserListType: Int {
 public class SFileBrowserView: UIView {
     private(set) var listType: SFileBrowserListType = .list
     private(set) var files: [SFile]?
+    
     var listView: SFileDetailListView = {
         let listView = SFileDetailListView.init()
         listView.isHidden = false
@@ -47,7 +48,8 @@ public class SFileBrowserView: UIView {
     }
     
     public func reloadBrowser(files: [SFile]?) {
-        
+        self.listView.reloadList(files: files)
+        self.iconsView.reloadList(files: files)
     }
     
     public func switchTo(listType: SFileBrowserListType) {
@@ -55,11 +57,18 @@ public class SFileBrowserView: UIView {
         self.listType = listType
         switch listType {
         case .list:
-            self.iconsView.isHidden = true
-            self.listView.isHidden = false
+            DispatchQueue.main.async {
+                self.iconsView.isHidden = true
+                self.listView.isHidden = false
+                self.listView.scrollToVisibleIndexPath(indexPath: self.iconsView.currentVisibleIndexPath()?.first)
+            }
+
         case .icons:
+            DispatchQueue.main.async {
             self.listView.isHidden = true
             self.iconsView.isHidden = false
+            self.iconsView.scrollToVisibleIndexPath(indexPath: self.listView.currentVisibleIndexPath()?.first)
+            }
         }
     }
 }
