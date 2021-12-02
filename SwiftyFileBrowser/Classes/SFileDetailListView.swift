@@ -12,7 +12,13 @@ class SFileDetailListView: UIView {
     private(set) var filesDataSource: [SFile] = [SFile]()
     
     lazy var listView: UITableView = {
-        let listView = UITableView.init(frame: .zero, style: UITableView.Style.plain)
+        var style = UITableView.Style.plain
+        if #available(iOS 13.0, *) {
+            style = UITableView.Style.insetGrouped
+        } else {
+            style = UITableView.Style.grouped
+        }
+        let listView = UITableView.init(frame: .zero, style: style)
         listView.delegate = self
         listView.dataSource = self
         listView.register(SFileDetailCell.self, forCellReuseIdentifier: "SFileDetailCell")
@@ -78,6 +84,11 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
         let file = self.filesDataSource[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "SFileDetailCell", for: indexPath)
         cell.textLabel?.text = file.fileName
+        cell.detailTextLabel?.text = file.detailText
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
     }
 }

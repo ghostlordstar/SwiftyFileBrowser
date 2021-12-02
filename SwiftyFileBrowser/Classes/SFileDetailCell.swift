@@ -8,7 +8,17 @@
 import UIKit
 
 class SFileDetailCell: UITableViewCell {
-
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
+        self.p_setUpUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -20,4 +30,8 @@ class SFileDetailCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    func p_setUpUI() {
+        self.accessoryType = .disclosureIndicator
+    }
+    
 }

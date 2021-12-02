@@ -11,10 +11,12 @@ import SwiftyFileBrowser
 
 class ViewController: UIViewController {
 
+    var sfbView: SFileBrowserView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let sfbView = SFileBrowserView.init(frame: UIScreen.main.bounds)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.refresh, target: self, action: #selector(p_swiftchListType))
+        self.sfbView = SFileBrowserView.init(frame: UIScreen.main.bounds, type: .list)
         let files = [
             FileObject.init(id: "111", name: "name111", detail: "2021/09/11"),
             FileObject.init(id: "222", name: "name222", detail: "2021/09/13"),
@@ -23,10 +25,14 @@ class ViewController: UIViewController {
             FileObject.init(id: "555", name: "name555", detail: "2021/09/15"),
             FileObject.init(id: "666", name: "name666", detail: "2021/09/16")
         ]
-        sfbView.reloadBrowser(files: files)
-        self.view.addSubview(sfbView)
+        self.sfbView?.reloadBrowser(files: files)
+        self.view.addSubview(self.sfbView!)
     }
 
+    @objc func p_swiftchListType() {
+        self.sfbView?.switchTo()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

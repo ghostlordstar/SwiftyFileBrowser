@@ -10,6 +10,15 @@ import UIKit
 public enum SFileBrowserListType: Int {
     case list       // list
     case icons      // icon
+    
+    func next() -> SFileBrowserListType {
+        switch self {
+        case .list:
+            return .icons
+        case .icons:
+            return .list
+        }
+    }
 }
 
 public class SFileBrowserView: UIView {
@@ -17,13 +26,13 @@ public class SFileBrowserView: UIView {
     private(set) var files: [SFile]?
     
     var listView: SFileDetailListView = {
-        let listView = SFileDetailListView.init()
+        let listView = SFileDetailListView()
         listView.isHidden = false
         return listView
     }()
     
     var iconsView: SFileIconsListView = {
-        let iconsView = SFileIconsListView.init()
+        let iconsView = SFileIconsListView()
         iconsView.isHidden = true
         return iconsView
     }()
@@ -36,13 +45,15 @@ public class SFileBrowserView: UIView {
         super.init(frame: frame)
     }
     
-    convenience init(frame: CGRect, type: SFileBrowserListType = .list) {
+    public convenience init(frame: CGRect, type: SFileBrowserListType = .list) {
         self.init(frame: frame)
         self.listType = type
         self.p_setUpUI()
     }
 
     func p_setUpUI() {
+        self.listView.frame = self.bounds
+        self.iconsView.frame = self.bounds
         self.addSubview(self.listView)
         self.addSubview(self.iconsView)
     }
@@ -50,6 +61,10 @@ public class SFileBrowserView: UIView {
     public func reloadBrowser(files: [SFile]?) {
         self.listView.reloadList(files: files)
         self.iconsView.reloadList(files: files)
+    }
+    
+    public func switchTo() {
+        self.switchTo(listType: self.listType.next())
     }
     
     public func switchTo(listType: SFileBrowserListType) {
@@ -62,7 +77,7 @@ public class SFileBrowserView: UIView {
                 self.listView.isHidden = false
                 self.listView.scrollToVisibleIndexPath(indexPath: self.iconsView.currentVisibleIndexPath()?.first)
             }
-
+        
         case .icons:
             DispatchQueue.main.async {
             self.listView.isHidden = true
