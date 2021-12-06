@@ -9,9 +9,11 @@ import Foundation
 
 // 文件状态
 public enum SFileState {
-    case notDownloaded
+    case notDownloaded                  // 未下载
+    case readyToDownload                // 等待下载
     case downloading(progress: Float)   // 下载进度，0.0~1.0
-    case downloaded
+    case pausedDownload(progress: Float)// 暂停中
+    case downloaded                     // 下载完成
 }
 
 public enum SFileType {

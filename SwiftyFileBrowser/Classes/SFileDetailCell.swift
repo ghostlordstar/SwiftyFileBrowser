@@ -38,7 +38,7 @@ class SFileDetailCell: UITableViewCell {
         self.contentView.addSubview(self.detailLabel)
         self.contentView.addSubview(self.thumbnailImageView)
         self.contentView.addSubview(self.appIconView)
-//        self.contentView.addSubview(self.sepLineView)
+//        self.contentView.addSubview(self.downloadBtn)
         
         p_layout()
     }
@@ -59,16 +59,16 @@ class SFileDetailCell: UITableViewCell {
         
         self.detailLabel.translatesAutoresizingMaskIntoConstraints = false
         self.detailLabel.leftAnchor.constraint(equalTo: self.thumbnailImageView.rightAnchor, constant: 5.scale).isActive = true
-        self.detailLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 14.scale).isActive = true
+        self.detailLabel.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 5.scale).isActive = true
         self.detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -30.scale).isActive = true
-        self.detailLabel.heightAnchor.constraint(equalToConstant: 14.scale).isActive = true
+        self.detailLabel.heightAnchor.constraint(equalToConstant: 16.scale).isActive = true
     }
     
     // MARK: - lazy load -
     lazy var titleLabel: UILabel = {
         let titleLabel = UILabel.init()
         titleLabel.lineBreakMode = .byTruncatingMiddle
-        titleLabel.font = UIFont.systemFont(ofSize: 17)
+        titleLabel.font = UIFont.systemFont(ofSize: 16)
         titleLabel.textColor = .black
         titleLabel.backgroundColor = .clear
         return titleLabel
@@ -92,6 +92,13 @@ class SFileDetailCell: UITableViewCell {
         let appIconView = UIImageView.init()
         return appIconView
     }()
+    
+//    lazy var downloadBtn: UIButton = {
+//        let downloadBtn = UIButton.init()
+//        downloadBtn.buttonType =
+//        downloadBtn.isHidden = true
+//        return downloadBtn
+//    }()
 }
 
 extension SFileDetailCell: SFileCellProtocol {

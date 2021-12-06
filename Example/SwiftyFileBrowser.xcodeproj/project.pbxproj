@@ -272,10 +272,12 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SwiftyFileBrowser_Example/Pods-SwiftyFileBrowser_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/NFDownloadButton/NFDownloadButton.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyFileBrowser/SwiftyFileBrowser.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NFDownloadButton.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyFileBrowser.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.refresh, target: self, action: #selector(p_swiftchListType))
         self.sfbView = SFileBrowserView.init(frame: UIScreen.main.bounds, type: .list)
         let files = [
-            FileObject.init(id: "111", type: .folder, name: "name111", detail: "2021/09/11"),
+            FileObject.init(id: "111", type: .folder, name: "name111434534534534523423535436346awefasdfas", detail: "2021/09/11-asdgsfgfadsfadfadfasdfadfadfadfadf"),
             FileObject.init(id: "222", name: "name222", detail: "2021/09/13"),
             FileObject.init(id: "333", name: "name333", detail: "2021/09/14"),
             FileObject.init(id: "444", type: .unknow, name: "name444", detail: "2021/09/14"),
