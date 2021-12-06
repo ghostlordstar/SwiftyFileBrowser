@@ -1,5 +1,4 @@
 import XCTest
-import SwiftyFileBrowser
 
 class Tests: XCTestCase {
     

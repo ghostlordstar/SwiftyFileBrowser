@@ -58,7 +58,7 @@ class SFileIconsListView: UIView {
     
     func scrollToVisibleIndexPath(indexPath: IndexPath?, animated: Bool = false) {
         if let indexPath = indexPath {
-            self.listView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.none, animated: animated)
+            self.listView.scrollToRow(at: indexPath, at: .none, animated: animated)
         }
     }
 

@@ -2,7 +2,7 @@
 //  SFileDetailListView.swift
 //  SwiftyFileBrowser
 //
-//  Created by b612 on 2021/11/24.
+//  Created by Hansen on 2021/11/24.
 //
 
 import UIKit
@@ -21,14 +21,15 @@ class SFileDetailListView: UIView {
         let listView = UITableView.init(frame: .zero, style: style)
         listView.delegate = self
         listView.dataSource = self
-        listView.register(SFileDetailCell.self, forCellReuseIdentifier: "SFileDetailCell")
+        listView.register(SFileDetailCell.self, forCellReuseIdentifier: SFileDetailCell.identifierOfCell())
         listView.backgroundColor = UIColor.white
-        listView.separatorStyle = .none
         listView.showsVerticalScrollIndicator = false
         listView.showsHorizontalScrollIndicator = false
         listView.estimatedRowHeight = 0
         listView.estimatedSectionHeaderHeight = 0
         listView.estimatedSectionFooterHeight = 0
+        listView.separatorStyle = .singleLine
+        listView.separatorInset = .init(top: 0, left: 60.scale, bottom: 0, right: 0)
         return listView
     }()
     
@@ -65,7 +66,7 @@ class SFileDetailListView: UIView {
     
     func scrollToVisibleIndexPath(indexPath: IndexPath?, animated: Bool = false) {
         if let indexPath = indexPath {
-            self.listView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.none, animated: animated)
+            self.listView.scrollToRow(at: indexPath, at: .none, animated: animated)
         }
     }
 }
@@ -82,13 +83,18 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let file = self.filesDataSource[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SFileDetailCell", for: indexPath)
-        cell.textLabel?.text = file.fileName
-        cell.detailTextLabel?.text = file.detailText
+        let cell = tableView.dequeueReusableCell(withIdentifier: SFileDetailCell.identifierOfCell(), for: indexPath)
+        if let sfileCell = cell as? SFileCellProtocol {
+            sfileCell.setupCell(indexPath: indexPath, file: file)
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60.scale
     }
 }

@@ -15,6 +15,7 @@ public enum SFileState {
 }
 
 public enum SFileType {
+    case folder
     case image(format: String?)
     case music(format: String?)
     case video(format: String?)
@@ -31,5 +32,6 @@ public protocol SFile {
     var detailText: String? { get set } // 只能显示两行，居中显示
     var fileType: SFileType { get set }
     var state: SFileState { get set }
-    var thumbnail: UIImage? { get set }
+    var thumbnail: UIImage? { get set } // 缩略图
+    var appIcon: UIImage? {get set}     // appIcon
 }

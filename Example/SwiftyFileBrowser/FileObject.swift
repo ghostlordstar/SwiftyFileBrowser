@@ -12,11 +12,12 @@ import UIKit
 
 class FileObject: SFile {
 
-    convenience init(id: String, name: String?, detail: String?) {
+    convenience init(id: String, type: SFileType = .folder, name: String?, detail: String?) {
         self.init()
         self.identifier = id
         self.fileName = name
         self.detailText = detail
+        self.fileType = type
     }
     
     var identifier: String = ""
@@ -30,5 +31,7 @@ class FileObject: SFile {
     var state: SFileState = .notDownloaded
     
     var thumbnail: UIImage?
+    
+    var appIcon: UIImage?
 }
 
