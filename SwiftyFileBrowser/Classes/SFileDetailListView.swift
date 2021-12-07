@@ -10,6 +10,7 @@ import UIKit
 class SFileDetailListView: UIView {
 
     private(set) var filesDataSource: [SFile] = [SFile]()
+    weak var previewDelegate: UIViewControllerPreviewingDelegate?
     
     lazy var listView: UITableView = {
         var style = UITableView.Style.plain
@@ -21,6 +22,7 @@ class SFileDetailListView: UIView {
         let listView = UITableView.init(frame: .zero, style: style)
         listView.delegate = self
         listView.dataSource = self
+        listView.dropDelegate = self
         listView.register(SFileDetailCell.self, forCellReuseIdentifier: SFileDetailCell.identifierOfCell())
         listView.backgroundColor = UIColor.white
         listView.showsVerticalScrollIndicator = false
@@ -84,7 +86,7 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let file = self.filesDataSource[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: SFileDetailCell.identifierOfCell(), for: indexPath)
-        if let sfileCell = cell as? SFileCellProtocol {
+        if let sfileCell = cell as? SFileCellSetupProtocol {
             sfileCell.setupCell(indexPath: indexPath, file: file)
         }
         return cell
@@ -96,5 +98,11 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60.scale
+    }
+}
+
+extension SFileDetailListView: UITableViewDropDelegate {
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        print("coordinator: %@", coordinator)
     }
 }

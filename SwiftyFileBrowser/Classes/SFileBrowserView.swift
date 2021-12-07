@@ -24,6 +24,12 @@ public enum SFileBrowserListType: Int {
 public class SFileBrowserView: UIView {
     private(set) var listType: SFileBrowserListType = .list
     private(set) var files: [SFile]?
+    // 3D touch 代理
+    weak var previewDelegate: UIViewControllerPreviewingDelegate? {
+        didSet {
+            
+        }
+    }
     
     var listView: SFileDetailListView = {
         let listView = SFileDetailListView()

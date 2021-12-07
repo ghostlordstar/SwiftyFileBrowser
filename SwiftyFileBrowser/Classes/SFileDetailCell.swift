@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import NFDownloadButton
 
 class SFileDetailCell: UITableViewCell {
     var indexPath: IndexPath?
     var file: SFile?
+    weak var delegate: SFileCellActionProtocol?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -24,13 +26,12 @@ class SFileDetailCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
-
+    
     func p_setUpUI() {
         self.selectionStyle = .none
         
@@ -38,7 +39,7 @@ class SFileDetailCell: UITableViewCell {
         self.contentView.addSubview(self.detailLabel)
         self.contentView.addSubview(self.thumbnailImageView)
         self.contentView.addSubview(self.appIconView)
-//        self.contentView.addSubview(self.downloadBtn)
+        self.contentView.addSubview(self.downloadBtn)
         
         p_layout()
     }
@@ -62,6 +63,18 @@ class SFileDetailCell: UITableViewCell {
         self.detailLabel.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 5.scale).isActive = true
         self.detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -30.scale).isActive = true
         self.detailLabel.heightAnchor.constraint(equalToConstant: 16.scale).isActive = true
+        
+        self.downloadBtn.translatesAutoresizingMaskIntoConstraints = false
+        self.downloadBtn.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 0).isActive = true
+        self.downloadBtn.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -10.scale).isActive = true
+        self.downloadBtn.widthAnchor.constraint(equalToConstant: 36.scale).isActive = true
+        self.downloadBtn.heightAnchor.constraint(equalToConstant: 36.scale).isActive = true
+    }
+    
+    @objc func p_downloadBtnAction() {
+        if let curFile = self.file {
+            self.delegate?.fileDownloadAction(indexPath: indexPath, file: curFile)
+        }
     }
     
     // MARK: - lazy load -
@@ -93,15 +106,17 @@ class SFileDetailCell: UITableViewCell {
         return appIconView
     }()
     
-//    lazy var downloadBtn: UIButton = {
-//        let downloadBtn = UIButton.init()
-//        downloadBtn.buttonType =
-//        downloadBtn.isHidden = true
-//        return downloadBtn
-//    }()
+    lazy var downloadBtn: NFDownloadButton = {
+        let downloadBtn = NFDownloadButton.init()
+        downloadBtn.initialColor = .systemBlue
+        downloadBtn.isHidden = true
+        downloadBtn.addTarget(self, action: #selector(p_downloadBtnAction), for: .touchUpInside)
+        return downloadBtn
+    }()
 }
 
-extension SFileDetailCell: SFileCellProtocol {
+extension SFileDetailCell: SFileCellSetupProtocol {
+    
     func setupCell(indexPath: IndexPath?, file: SFile) {
         self.indexPath = indexPath
         self.file = file
@@ -114,11 +129,41 @@ extension SFileDetailCell: SFileCellProtocol {
             self.thumbnailImageView.image = self.file?.thumbnail ?? UIImage.imageNamed("icon_folder_close", bundleForClass: SFileDetailCell.self)
             self.appIconView.image = self.file?.appIcon
             self.accessoryType = .disclosureIndicator
+            self.downloadBtn.isHidden = true
         default:
             self.thumbnailImageView.image = self.file?.thumbnail ?? UIImage.imageNamed("icon_file_unknow", bundleForClass: SFileDetailCell.self)
             self.appIconView.image = self.file?.appIcon
             self.accessoryType = .none
+            self.downloadBtn.isHidden = false
+            self.update(fileState: self.file?.state ?? .downloaded)
         }
+    }
+    
+    func update(fileState: SFileState) {
+        switch (fileState) {
+        case .notDownloaded:
+            self.downloadBtn.downloadState = .toDownload
+            self.downloadBtn.isHidden = false
+        case .readyToDownload:
+            self.downloadBtn.downloadState = .willDownload
+            self.downloadBtn.isHidden = false
+        case .downloading(let progress):
+            self.downloadBtn.downloadState = .readyToDownload
+            self.downloadBtn.downloadPercent = CGFloat(progress)
+            self.downloadBtn.isHidden = false
+        case .pausedDownload(let progress):
+            self.downloadBtn.downloadState = .readyToDownload
+            self.downloadBtn.downloadPercent = CGFloat(progress)
+            self.downloadBtn.isHidden = false
+        case .downloaded:
+            self.downloadBtn.downloadState = .downloaded
+            self.downloadBtn.downloadPercent = 1.0
+            self.downloadBtn.isHidden = true
+        }
+    }
+    
+    func registerPreview(delegate: UIViewControllerPreviewingDelegate?) {
+        
     }
     
     class func identifierOfCell() -> String {

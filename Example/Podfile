@@ -1,13 +1,8 @@
 use_frameworks!
 
-platform :ios, '10.0'
+platform :ios, '11.0'
 
 target 'SwiftyFileBrowser_Example' do
   pod 'SwiftyFileBrowser', :path => '../'
-
-  target 'SwiftyFileBrowser_Tests' do
-    inherit! :search_paths
-
-    
-  end
+  pod 'NFDownloadButton', :git => 'https://github.com/ghostlordstar/NFDownloadButton.git',  :branch => 'master'
 end
