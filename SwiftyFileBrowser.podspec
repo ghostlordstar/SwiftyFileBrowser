@@ -21,11 +21,11 @@ Pod::Spec.new do |s|
     A file browser lib of swift.
     DESC
     
-    s.homepage         = 'https://github.com/Hansen/SwiftyFileBrowser'
+    s.homepage         = 'https://github.com/ghostlordstar/SwiftyFileBrowser'
     s.screenshots      = 'https://raw.githubusercontent.com/ghostlordstar/SwiftyFileBrowser/main/ScreenShot/st_list.png'
     s.license          = { :type => 'MIT', :file => 'LICENSE' }
     s.author           = { 'Hansen' => 'heshanzhang@outlook.com' }
-    s.source           = { :git => 'https://github.com/Hansen/SwiftyFileBrowser.git', :tag => s.version.to_s }
+    s.source           = { :git => 'https://github.com/ghostlordstar/SwiftyFileBrowser.git', :tag => s.version.to_s }
     # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
     
     s.ios.deployment_target = '11.0'

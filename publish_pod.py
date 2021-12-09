@@ -90,8 +90,8 @@ def pushToMainAndPushSpecs():
 # 直接push到CTSpecs
 def pushToPrivateSpecs():
 
-    checkCommand = "pod spec lint %s.podspec https://github.com/CocoaPods/Specs' --allow-warnings"%podName
-    pushCommand = "pod repo push %s.podspec https://github.com/CocoaPods/Specs' --allow-warnings --use-modular-headers"%podName
+    checkCommand = "pod spec lint %s.podspec https://github.com/CocoaPods/Specs --allow-warnings"%podName
+    pushCommand = "pod repo push %s.podspec https://github.com/CocoaPods/Specs --allow-warnings --use-modular-headers"%podName
     updatePirvateRepo = "pod repo update"
     checkRet = os.system(checkCommand)
     if checkRet != 0:
