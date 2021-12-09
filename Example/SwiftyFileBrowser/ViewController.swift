@@ -16,6 +16,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.refresh, target: self, action: #selector(p_swiftchListType))
         self.sfbView = SFileBrowserView.init(frame: UIScreen.main.bounds, type: .list)
+        self.sfbView?.delegate = self
         let files = [
             FileObject.init(id: "111", type: .folder, name: "name111434534534534523423535436346awefasdfas", detail: "2021/09/11-asdgsfgfadsfadfadfasdfadfadfadfadf"),
             FileObject.init(id: "222", name: "name222", detail: "2021/09/13"),
@@ -38,15 +39,16 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UIViewControllerPreviewingDelegate {
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        
+extension ViewController: SFileBrowserDelegate {
+    func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
+        print("\(#function)")
     }
     
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        
+    func fileLongTouchAction(indexPath: IndexPath?, file: SFile) {
+        print("\(#function)")
     }
     
-    
+    func fileTouchAction(indexPath: IndexPath?, file: SFile) {
+        print("\(#function)")
+    }
 }
-

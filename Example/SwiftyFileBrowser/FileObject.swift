@@ -28,7 +28,7 @@ class FileObject: SFile {
     
     var fileType: SFileType = .unknow
     
-    var state: SFileState = .notDownloaded
+    var state: SFileState = .downloading(progress: 0.4)
     
     var thumbnail: UIImage?
     

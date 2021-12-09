@@ -8,9 +8,14 @@
 import UIKit
 
 class SFileDetailListView: UIView {
-
+    
     private(set) var filesDataSource: [SFile] = [SFile]()
-    weak var previewDelegate: UIViewControllerPreviewingDelegate?
+    weak var delegate: SFileBrowserDelegate?
+    
+    lazy var longPressGesture: UILongPressGestureRecognizer = {
+        let longPressGesture = UILongPressGestureRecognizer.init(target: self, action: #selector(p_longPressAction))
+        return longPressGesture
+    }()
     
     lazy var listView: UITableView = {
         var style = UITableView.Style.plain
@@ -22,7 +27,6 @@ class SFileDetailListView: UIView {
         let listView = UITableView.init(frame: .zero, style: style)
         listView.delegate = self
         listView.dataSource = self
-        listView.dropDelegate = self
         listView.register(SFileDetailCell.self, forCellReuseIdentifier: SFileDetailCell.identifierOfCell())
         listView.backgroundColor = UIColor.white
         listView.showsVerticalScrollIndicator = false
@@ -32,6 +36,7 @@ class SFileDetailListView: UIView {
         listView.estimatedSectionFooterHeight = 0
         listView.separatorStyle = .singleLine
         listView.separatorInset = .init(top: 0, left: 60.scale, bottom: 0, right: 0)
+        listView.addGestureRecognizer(self.longPressGesture)
         return listView
     }()
     
@@ -53,6 +58,17 @@ class SFileDetailListView: UIView {
         self.listView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     }
     
+    @objc func p_longPressAction(gesture: UILongPressGestureRecognizer?) {
+        if let ges = gesture, ges.state == .began {
+            let point = ges.location(in: self.listView)
+            let indexPath = self.listView.indexPathForRow(at: point)
+            if let index = indexPath {
+                let file = self.filesDataSource[index.row]
+                self.delegate?.fileLongTouchAction(indexPath: index, file: file)
+            }
+        }
+    }
+    
     func reloadList(files: [SFile]?) {
         if let files = files {
             DispatchQueue.main.async { [weak self] in
@@ -61,9 +77,41 @@ class SFileDetailListView: UIView {
             }
         }
     }
+    // MARK: update file state
+    func updateFileState(file: SFile) {
+        for (index, oldFile) in self.filesDataSource.enumerated() {
+            if oldFile.identifier == file.identifier {
+                oldFile.copyFromFile(file: file)
+                self.updateListCell(index: index)
+                return
+            }
+        }
+    }
+    
+    func updateFileState(fileIdentifier: String, fileState: SFileState) {
+        for (index, oldFile) in self.filesDataSource.enumerated() {
+            if oldFile.identifier == fileIdentifier {
+                oldFile.state = fileState
+                self.updateListCell(index: index)
+                return
+            }
+        }
+    }
     
     func currentVisibleIndexPath() -> [IndexPath]? {
         return self.listView.indexPathsForVisibleRows;
+    }
+    
+    func updateListCell(index: Int?) {
+        if let idx = index, idx >= 0 && self.filesDataSource.count > idx {
+            self.updateListCell(index: IndexPath.init(row: idx, section: 0))
+        }
+    }
+    
+    func updateListCell(index: IndexPath?) {
+        if let idx = index, idx.row >= 0, self.filesDataSource.count > idx.row {
+            self.listView.reloadRows(at: [idx], with: UITableView.RowAnimation.none)
+        }
     }
     
     func scrollToVisibleIndexPath(indexPath: IndexPath?, animated: Bool = false) {
@@ -86,6 +134,9 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let file = self.filesDataSource[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: SFileDetailCell.identifierOfCell(), for: indexPath)
+        if let sfileCell = cell as? SFileBaseTableViewCell {
+            sfileCell.delegate = self
+        }
         if let sfileCell = cell as? SFileCellSetupProtocol {
             sfileCell.setupCell(indexPath: indexPath, file: file)
         }
@@ -93,7 +144,8 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let file = self.filesDataSource[indexPath.row]
+        self.fileTouchAction(indexPath: indexPath, file: file)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -101,8 +153,16 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension SFileDetailListView: UITableViewDropDelegate {
-    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
-        print("coordinator: %@", coordinator)
+extension SFileDetailListView: SFileBrowserDelegate {
+    func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileDownloadButtonAction(indexPath: indexPath, file: file)
+    }
+    
+    func fileLongTouchAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileLongTouchAction(indexPath: indexPath, file: file)
+    }
+    
+    func fileTouchAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileTouchAction(indexPath: indexPath, file: file)
     }
 }

@@ -9,7 +9,6 @@ import UIKit
 
 class SFileIconsListView: UIView {
     private(set) var filesDataSource: [SFile] = [SFile]()
-    weak var previewDelegate: UIViewControllerPreviewingDelegate?
     
     lazy var listView: UITableView = {
         let listView = UITableView.init(frame: .zero, style: UITableView.Style.plain)

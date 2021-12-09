@@ -24,12 +24,7 @@ public enum SFileBrowserListType: Int {
 public class SFileBrowserView: UIView {
     private(set) var listType: SFileBrowserListType = .list
     private(set) var files: [SFile]?
-    // 3D touch 代理
-    weak var previewDelegate: UIViewControllerPreviewingDelegate? {
-        didSet {
-            
-        }
-    }
+    weak public var delegate: SFileBrowserDelegate?
     
     var listView: SFileDetailListView = {
         let listView = SFileDetailListView()
@@ -60,6 +55,7 @@ public class SFileBrowserView: UIView {
     func p_setUpUI() {
         self.listView.frame = self.bounds
         self.iconsView.frame = self.bounds
+        self.listView.delegate = self
         self.addSubview(self.listView)
         self.addSubview(self.iconsView)
     }
@@ -69,8 +65,16 @@ public class SFileBrowserView: UIView {
         self.iconsView.reloadList(files: files)
     }
     
+    public func updateFileState(file: SFile) {
+        self.listView.updateFileState(file: file)
+    }
+    
+    public func updateFileState(fileIdentifier: String, fileState: SFileState) {
+        self.listView.updateFileState(fileIdentifier: fileIdentifier, fileState: fileState)
+    }
+    
     public func switchTo() {
-        self.switchTo(listType: self.listType.next())
+//        self.switchTo(listType: self.listType.next())
     }
     
     public func switchTo(listType: SFileBrowserListType) {
@@ -91,5 +95,19 @@ public class SFileBrowserView: UIView {
             self.iconsView.scrollToVisibleIndexPath(indexPath: self.listView.currentVisibleIndexPath()?.first)
             }
         }
+    }
+}
+
+extension SFileBrowserView: SFileBrowserDelegate {
+    public func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileDownloadButtonAction(indexPath: indexPath, file: file)
+    }
+    
+    public func fileLongTouchAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileLongTouchAction(indexPath: indexPath, file: file)
+    }
+    
+    public func fileTouchAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileTouchAction(indexPath: indexPath, file: file)
     }
 }

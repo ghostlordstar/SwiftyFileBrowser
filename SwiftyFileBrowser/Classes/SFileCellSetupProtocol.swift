@@ -7,9 +7,8 @@
 
 import Foundation
 
-protocol SFileCellSetupProtocol: AnyObject {
-    func setupCell(indexPath: IndexPath?, file: SFile)
+public protocol SFileCellSetupProtocol: AnyObject {
     static func identifierOfCell() -> String
+    func setupCell(indexPath: IndexPath?, file: SFile)
     func update(fileState: SFileState)
-    func registerPreview(delegate: UIViewControllerPreviewingDelegate?)
 }
