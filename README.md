@@ -6,6 +6,8 @@ File browser, file manager UI, browser by list, browser by icon,文件浏览器,
 [![License](https://img.shields.io/cocoapods/l/SwiftyFileBrowser.svg?style=flat)](https://cocoapods.org/pods/SwiftyFileBrowser)
 [![Platform](https://img.shields.io/cocoapods/p/SwiftyFileBrowser.svg?style=flat)](https://cocoapods.org/pods/SwiftyFileBrowser)
 
+## Screen Shot
+![Listtype](https://raw.githubusercontent.com/ghostlordstar/SwiftyFileBrowser/main/ScreenShot/st_list.png)
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
@@ -19,11 +21,12 @@ it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'SwiftyFileBrowser'
+pod 'NFDownloadButton', :git => 'https://github.com/ghostlordstar/NFDownloadButton.git',  :branch => 'master'
 ```
 
 ## Author
 
-Hansen, zhangheshan@yiruikecorp.com
+Hansen, heshanzhang@outlook.com
 
 ## License
 
