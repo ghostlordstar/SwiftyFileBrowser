@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import NFDownloadButton
+import AppleDownloadButton
 
 class SFileDetailCell: SFileBaseTableViewCell {
     
@@ -103,8 +103,8 @@ class SFileDetailCell: SFileBaseTableViewCell {
         return appIconView
     }()
     
-    lazy var downloadBtn: NFDownloadButton = {
-        let downloadBtn = NFDownloadButton.init(frame: .zero, isDownloaded: false, style: .iOS, palette: Palette.init(initialColor: .systemBlue, rippleColor: nil, buttonBackgroundColor: .clear, downloadColor: .systemBlue, deviceColor: .systemBlue))
+    lazy var downloadBtn: AppleDownloadButton = {
+        let downloadBtn = AppleDownloadButton.init(frame: .zero, isDownloaded: false, style: .iOS, palette: Palette.init(initialColor: .systemBlue, rippleColor: nil, buttonBackgroundColor: .clear, downloadColor: .systemBlue, deviceColor: .systemBlue))
         downloadBtn.delegate = self
         downloadBtn.isHidden = true
         downloadBtn.addTarget(self, action: #selector(p_downloadBtnAction), for: .touchUpInside)
@@ -166,8 +166,8 @@ extension SFileDetailCell: SFileCellSetupProtocol {
     }
 }
 
-extension SFileDetailCell: NFDownloadButtonDelegate {
-    func stateChanged(button: NFDownloadButton, newState: NFDownloadButtonState) {
+extension SFileDetailCell: AppleDownloadButtonDelegate {
+    func stateChanged(button: AppleDownloadButton, newState: AppleDownloadButtonState) {
         
     }
 }

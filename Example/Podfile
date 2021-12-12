@@ -4,5 +4,5 @@ platform :ios, '11.0'
 
 target 'SwiftyFileBrowser_Example' do
   pod 'SwiftyFileBrowser', :path => '../'
-  pod 'NFDownloadButton', :git => 'https://github.com/ghostlordstar/NFDownloadButton.git',  :branch => 'master'
+  pod 'AppleDownloadButton'
 end
