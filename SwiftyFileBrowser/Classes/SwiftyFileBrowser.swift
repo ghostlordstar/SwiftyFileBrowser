@@ -1,5 +1,5 @@
 //
-//  SFileBrowserView.swift
+//  SwiftyFileBrowser.swift
 //  SwiftyFileBrowser
 //
 //  Created by Hansen on 2021/11/24.
@@ -21,7 +21,7 @@ public enum SFileBrowserListType: Int {
     }
 }
 
-public class SFileBrowserView: UIView {
+public class SwiftyFileBrowser: UIView {
     private(set) var listType: SFileBrowserListType = .list
     private(set) var files: [SFile]?
     weak public var delegate: SFileBrowserDelegate?
@@ -98,7 +98,7 @@ public class SFileBrowserView: UIView {
     }
 }
 
-extension SFileBrowserView: SFileBrowserDelegate {
+extension SwiftyFileBrowser: SFileBrowserDelegate {
     public func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileDownloadButtonAction(indexPath: indexPath, file: file)
     }
