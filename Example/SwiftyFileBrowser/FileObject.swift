@@ -22,6 +22,8 @@ class FileObject: SFile {
     
     var identifier: String = ""
     
+    var filePath: String?
+    
     var fileName: String?
     
     var detailText: String?

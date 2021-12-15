@@ -30,6 +30,7 @@ public enum SFileType {
 
 public protocol SFile: AnyObject {
     var identifier: String { get set }
+    var filePath: String? {get set}
     var fileName: String? { get set }
     var detailText: String? { get set } // 只能显示两行，居中显示
     var fileType: SFileType { get set }
@@ -41,6 +42,7 @@ public protocol SFile: AnyObject {
 public extension SFile {
     func copyFromFile(file: SFile) {
         if self.identifier == file.identifier {
+            self.filePath = file.filePath
             self.fileType = file.fileType
             self.fileName = file.fileName
             self.detailText = file.detailText
