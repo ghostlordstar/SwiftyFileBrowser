@@ -44,6 +44,8 @@ public class SwiftyFileBrowser: UIView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        self.listType = .list
+        self.p_setUpUI()
     }
     
     public convenience init(frame: CGRect, type: SFileBrowserListType = .list) {
