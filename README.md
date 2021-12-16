@@ -13,17 +13,71 @@ File browser, file manager UI, browser by list, browser by icon,文件浏览器,
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
+- iOS 10.0+
+- Swift 5.0+
 
+## Feature
+- [x] show files with list style
+- [ ] show files with icon style
+- [ ] dynamic switch style
+- [ ] reload list with difference algorithm  
 ## Installation
 
+### Cocoapods
 SwiftyFileBrowser is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'SwiftyFileBrowser'
-pod 'NFDownloadButton', :git => 'https://github.com/ghostlordstar/NFDownloadButton.git',  :branch => 'master'
 ```
 
+## Usage
+### 1. implement `SFile` protocol
+
+```swift
+class FileObject: SFile {
+
+    convenience init(id: String, type: SFileType = .folder, name: String?, detail: String?) {
+        self.init()
+        self.identifier = id
+        self.fileName = name
+        self.detailText = detail
+        self.fileType = type
+    }
+    
+    var identifier: String = ""
+    
+    var filePath: String?
+    
+    var fileName: String?
+    
+    var detailText: String?
+    
+    var fileType: SFileType = .unknow
+    
+    var state: SFileState = .downloading(progress: 0.4)
+    
+    var thumbnail: UIImage?
+    
+    var appIcon: UIImage?
+}
+```
+### 2. add `SwiftyFileBrowser` to view
+```swift
+
+    let sfbView = SwiftyFileBrowser.init(frame: UIScreen.main.bounds, type: .list)
+        sfbView.delegate = self
+        let files = [
+            FileObject.init(id: "111", type: .folder, name: "name111434534534534523423535436346awefasdfas", detail: "2021/09/11-asdgsfgfadsfadfadfasdfadfadfadfadf"),
+            FileObject.init(id: "222", name: "name222", detail: "2021/09/13"),
+            FileObject.init(id: "333", name: "name333", detail: "2021/09/14"),
+            FileObject.init(id: "444", type: .unknow, name: "name444", detail: "2021/09/14"),
+            FileObject.init(id: "555", name: "name555", detail: "2021/09/15"),
+            FileObject.init(id: "666", name: "name666", detail: "2021/09/16")
+        ]
+        sfbView.reloadBrowser(files: files)
+        self.view.addSubview(sfbView!)
+```
 ## Author
 
 Hansen, heshanzhang@outlook.com
