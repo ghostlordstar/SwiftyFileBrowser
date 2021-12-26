@@ -44,10 +44,10 @@ class SFileDetailCell: SFileBaseTableViewCell {
     func p_layout() {
         
         self.thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
-        self.thumbnailImageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 10.scale).isActive = true
+        self.thumbnailImageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 5.scale).isActive = true
         self.thumbnailImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
-        self.thumbnailImageView.widthAnchor.constraint(equalToConstant: 50.scale).isActive = true
-        self.thumbnailImageView.heightAnchor.constraint(equalToConstant: 50.scale).isActive = true
+        self.thumbnailImageView.widthAnchor.constraint(equalToConstant: 44.scale).isActive = true
+        self.thumbnailImageView.heightAnchor.constraint(equalToConstant: 44.scale).isActive = true
         
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.titleLabel.leftAnchor.constraint(equalTo: self.thumbnailImageView.rightAnchor, constant: 5.scale).isActive = true
