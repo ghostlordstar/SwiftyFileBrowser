@@ -158,6 +158,9 @@ extension SFileDetailCell: SFileCellSetupProtocol {
         case .downloaded:
             self.downloadBtn.downloadState = .downloaded
             self.downloadBtn.isHidden = true
+        case .downloadError(_):
+            self.downloadBtn.isHidden = false
+            self.downloadBtn.downloadState = .willDownload
         }
     }
 

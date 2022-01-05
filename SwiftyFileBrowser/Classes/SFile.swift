@@ -14,6 +14,7 @@ public enum SFileState {
     case downloading(progress: Float)   // 下载进度，0.0~1.0
     case pausedDownload(progress: Float)// 暂停中
     case downloaded                     // 下载完成
+    case downloadError(error: Error)    // 下载失败
 }
 
 public enum SFileType {
