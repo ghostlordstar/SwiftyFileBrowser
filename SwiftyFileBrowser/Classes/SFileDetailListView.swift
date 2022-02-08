@@ -110,7 +110,7 @@ class SFileDetailListView: UIView {
     
     func updateListCell(index: IndexPath?) {
         if let idx = index, idx.row >= 0, self.filesDataSource.count > idx.row {
-            self.listView.reloadRows(at: [idx], with: UITableView.RowAnimation.none)
+            self.listView.reloadRows(at: [idx], with: .none)
         }
     }
     
@@ -151,6 +151,14 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60.scale
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? { return nil }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return 0.001 }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? { return nil }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat { return 0.001 }
 }
 
 extension SFileDetailListView: SFileBrowserDelegate {

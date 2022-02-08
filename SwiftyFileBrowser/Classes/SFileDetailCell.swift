@@ -31,12 +31,12 @@ class SFileDetailCell: SFileBaseTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.titleLabel.text = ""
-        self.detailLabel.text = ""
-        self.thumbnailImageView.image = nil
-        self.appIconView.image = nil
-        self.accessoryType = .none
-        self.downloadBtn.isHidden = true
+//        self.titleLabel.text = ""
+//        self.detailLabel.text = ""
+//        self.thumbnailImageView.image = nil
+//        self.appIconView.image = nil
+//        self.accessoryType = .none
+//        self.downloadBtn.isHidden = true
     }
     
     func p_setUpUI() {
