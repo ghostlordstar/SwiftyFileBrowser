@@ -128,20 +128,22 @@ extension SFileDetailCell: SFileCellSetupProtocol {
         self.indexPath = indexPath
         self.file = file
         
-        self.titleLabel.text = self.file?.fileName
-        self.detailLabel.text = self.file?.detailText
-        
-        switch (self.file?.fileType ?? .unknow) {
-        case .folder:
-            self.thumbnailImageView.image = self.file?.thumbnail ?? UIImage.imageNamed("icon_folder_close", bundleForClass: SFileDetailCell.self)
-            self.appIconView.image = self.file?.appIcon
-            self.accessoryType = .disclosureIndicator
-            self.downloadBtn.isHidden = true
-        default:
-            self.thumbnailImageView.image = self.file?.thumbnail ?? UIImage.imageNamed("icon_file_unknow", bundleForClass: SFileDetailCell.self)
-            self.appIconView.image = self.file?.appIcon
-            self.accessoryType = .none
-            self.update(fileState: self.file?.state ?? .downloaded)
+        DispatchQueue.main.async {
+            self.titleLabel.text = self.file?.fileName
+            self.detailLabel.text = self.file?.detailText
+            
+            switch (self.file?.fileType ?? .unknow) {
+            case .folder:
+                self.thumbnailImageView.image = self.file?.thumbnail ?? UIImage.imageNamed("icon_folder_close", bundleForClass: SFileDetailCell.self)
+                self.appIconView.image = self.file?.appIcon
+                self.accessoryType = .disclosureIndicator
+                self.downloadBtn.isHidden = true
+            default:
+                self.thumbnailImageView.image = self.file?.thumbnail ?? UIImage.imageNamed("icon_file_unknow", bundleForClass: SFileDetailCell.self)
+                self.appIconView.image = self.file?.appIcon
+                self.accessoryType = .none
+                self.update(fileState: self.file?.state ?? .downloaded)
+            }
         }
     }
     
