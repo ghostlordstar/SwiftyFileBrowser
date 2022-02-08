@@ -29,6 +29,16 @@ class SFileDetailCell: SFileBaseTableViewCell {
         // Configure the view for the selected state
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.titleLabel.text = ""
+        self.detailLabel.text = ""
+        self.thumbnailImageView.image = nil
+        self.appIconView.image = nil
+        self.accessoryType = .none
+        self.downloadBtn.isHidden = true
+    }
+    
     func p_setUpUI() {
         self.selectionStyle = .none
         
@@ -156,8 +166,8 @@ extension SFileDetailCell: SFileCellSetupProtocol {
                 self.downloadBtn.downloadPercent = CGFloat(progress)
             }
         case .downloaded:
-            self.downloadBtn.downloadState = .downloaded
             self.downloadBtn.isHidden = true
+            self.downloadBtn.downloadState = .downloaded
         case .downloadError(_):
             self.downloadBtn.isHidden = false
             self.downloadBtn.downloadState = .willDownload
