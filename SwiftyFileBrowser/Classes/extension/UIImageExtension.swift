@@ -184,3 +184,18 @@ public extension UIImage {
         return nil
     }
 }
+
+
+public extension UIImage {
+    
+    func dfa_darkImage() -> UIImage? {
+        
+        
+        
+        
+        
+        
+        
+    }
+
+}

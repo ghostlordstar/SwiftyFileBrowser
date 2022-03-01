@@ -76,7 +76,7 @@ public class SwiftyFileBrowser: UIView {
     }
     
     public func switchTo() {
-//        self.switchTo(listType: self.listType.next())
+        self.switchTo(listType: self.listType.next())
     }
     
     public func switchTo(listType: SFileBrowserListType) {

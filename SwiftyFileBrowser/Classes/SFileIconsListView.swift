@@ -8,21 +8,27 @@
 import UIKit
 
 class SFileIconsListView: UIView {
-    private(set) var filesDataSource: [SFile] = [SFile]()
     
-    lazy var listView: UITableView = {
-        let listView = UITableView.init(frame: .zero, style: UITableView.Style.plain)
+    private(set) var filesDataSource: [SFile] = [SFile]()
+    weak var delegate: SFileBrowserDelegate?
+
+    lazy var listView: UICollectionView = {
+        let listView = UICollectionView.init(frame: .zero, collectionViewLayout: self.cvLayout)
         listView.delegate = self
         listView.dataSource = self
-        listView.register(SFileDetailCell.self, forCellReuseIdentifier: "SFileDetailCell")
+        listView.register(SFileIconsCell.self, forCellWithReuseIdentifier: SFileIconsCell.className)
         listView.backgroundColor = UIColor.white
-        listView.separatorStyle = .none
         listView.showsVerticalScrollIndicator = false
         listView.showsHorizontalScrollIndicator = false
-        listView.estimatedRowHeight = 0
-        listView.estimatedSectionHeaderHeight = 0
-        listView.estimatedSectionFooterHeight = 0
         return listView
+    }()
+    
+    lazy var cvLayout: UICollectionViewFlowLayout = {
+        let cvlayout = UICollectionViewFlowLayout.init()
+        cvlayout.itemSize = CGSize(width: 100.scale, height: 170.scale)
+        cvlayout.minimumInteritemSpacing = 5.scale
+        cvlayout.sectionInset = UIEdgeInsets.init(top: 10.scale, left: 16.scale, bottom: 0, right: 16.scale)
+        return cvlayout
     }()
     
     override init(frame: CGRect) {
@@ -53,31 +59,64 @@ class SFileIconsListView: UIView {
     }
     
     func currentVisibleIndexPath() -> [IndexPath]? {
-        return self.listView.indexPathsForVisibleRows;
+        return self.listView.indexPathsForVisibleItems;
     }
     
     func scrollToVisibleIndexPath(indexPath: IndexPath?, animated: Bool = false) {
         if let indexPath = indexPath {
-            self.listView.scrollToRow(at: indexPath, at: .none, animated: animated)
+            self.listView.scrollToItem(at: indexPath, at: [], animated: animated)
         }
     }
-
+    
 }
 
-extension SFileIconsListView: UITableViewDelegate, UITableViewDataSource {
+extension SFileIconsListView: UICollectionViewDelegate, UICollectionViewDataSource {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.filesDataSource.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let file = self.filesDataSource[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SFileDetailCell", for: indexPath)
-        cell.textLabel?.text = file.fileName
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let file = self.filesDataSource[indexPath.item]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SFileIconsCell.className, for: indexPath)
+        if let sfileCell = cell as? SFileBaseCollectionViewCell {
+            sfileCell.delegate = self
+        }
+        if let sfileCell = cell as? SFileCellSetupProtocol {
+            sfileCell.setupCell(indexPath: indexPath, file: file)
+        }
         return cell
     }
 }
+
+extension SFileIconsListView: SFileBrowserDelegate {
+    func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileDownloadButtonAction(indexPath: indexPath, file: file)
+    }
+    
+    func fileLongTouchAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileLongTouchAction(indexPath: indexPath, file: file)
+    }
+    
+    func fileTouchAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileTouchAction(indexPath: indexPath, file: file)
+    }
+}
+
+//extension SFileIconsListView: UITableViewDelegate, UITableViewDataSource {
+//
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//        return 1
+//    }
+//
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return self.filesDataSource.count
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let file = self.filesDataSource[indexPath.row]
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "SFileDetailCell", for: indexPath)
+//        cell.textLabel?.text = file.fileName
+//        return cell
+//    }
+//}
