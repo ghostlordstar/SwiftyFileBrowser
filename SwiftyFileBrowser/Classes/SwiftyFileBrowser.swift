@@ -60,6 +60,7 @@ public class SwiftyFileBrowser: UIView {
         self.listView.delegate = self
         self.addSubview(self.listView)
         self.addSubview(self.iconsView)
+        self.switchTo(listType: self.listType)
     }
     
     public func reloadBrowser(files: [SFile]?) {
@@ -80,7 +81,6 @@ public class SwiftyFileBrowser: UIView {
     }
     
     public func switchTo(listType: SFileBrowserListType) {
-        guard listType != self.listType else { return }
         self.listType = listType
         switch listType {
         case .list:

@@ -168,7 +168,7 @@ extension SFileIconsCell: SFileCellSetupProtocol {
         case .downloading(let progress):
             self.downloadFlag.isHidden = false
             self.downloadBtn.isHidden = false
-            self.thumbnailImageView.image = (self.file?.thumbnail ?? UIImage.imageNamed("icon_file_unknow_blue", bundleForClass: SFileDetailCell.self))?.tint(.gray, blendMode: .darken, alpha: 0.4)
+            self.thumbnailImageView.image = (self.file?.thumbnail ?? UIImage.imageNamed("icon_file_unknow_blue", bundleForClass: SFileDetailCell.self))?.dfa_darkImage()
             self.downloadBtn.downloadState = .readyToDownload
             DispatchQueue.main.async {
                 self.downloadBtn.downloadPercent = CGFloat(progress)

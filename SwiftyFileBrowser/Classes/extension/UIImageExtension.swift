@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreImage
 
 // MARK: - Properties
 
@@ -190,12 +191,20 @@ public extension UIImage {
     
     func dfa_darkImage() -> UIImage? {
         
+        let ciCxt = CIContext.init(options: nil)
         
-        
-        
-        
-        
-        
+        if let ci = CIImage.init(image: self), let filter = CIFilter.init(name: "CIColorControls") {
+            // filter
+            filter.setValue(ci, forKey: kCIInputImageKey)
+//            filter.setValue(1, forKey: kCIInputBrightnessKey) // 亮度调低
+            filter.setValue(0.4, forKey: kCIInputSaturationKey) // 对比度调低
+            if let result: CIImage = filter.value(forKey: kCIOutputImageKey) as? CIImage {
+                if let cgimg = ciCxt.createCGImage(result, from: ci.extent) {
+                    return UIImage.init(cgImage: cgimg)
+                }
+            }
+        }
+        return self
     }
 
 }

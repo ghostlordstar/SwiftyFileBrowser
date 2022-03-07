@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.refresh, target: self, action: #selector(p_swiftchListType))
-        self.sfbView = SwiftyFileBrowser.init(frame: UIScreen.main.bounds, type: .list)
+        self.sfbView = SwiftyFileBrowser.init(frame: UIScreen.main.bounds, type: .icons)
         self.sfbView?.delegate = self
         let files = [
             FileObject.init(id: "111", type: .folder, name: "name111434534534534523423535436346awefasdfas", detail: "2021/09/11-asdgsfgfadsfadfadfasdfadfadfadfadf"),
