@@ -32,6 +32,9 @@ class SFileDetailListView: UIView {
         listView.showsVerticalScrollIndicator = false
         listView.showsHorizontalScrollIndicator = false
         listView.estimatedRowHeight = 0
+        if #available(iOS 11.0, *) {
+            listView.contentInsetAdjustmentBehavior = .never
+        }
         listView.estimatedSectionHeaderHeight = 0
         listView.estimatedSectionFooterHeight = 0
         listView.separatorStyle = .singleLine

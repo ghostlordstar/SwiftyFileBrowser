@@ -58,6 +58,7 @@ public class SwiftyFileBrowser: UIView {
         self.listView.frame = self.bounds
         self.iconsView.frame = self.bounds
         self.listView.delegate = self
+        self.iconsView.delegate = self
         self.addSubview(self.listView)
         self.addSubview(self.iconsView)
         self.switchTo(listType: self.listType)

@@ -20,6 +20,9 @@ class SFileIconsListView: UIView {
         listView.backgroundColor = UIColor.white
         listView.showsVerticalScrollIndicator = false
         listView.showsHorizontalScrollIndicator = false
+        if #available(iOS 11.0, *) {
+            listView.contentInsetAdjustmentBehavior = .never
+        }
         return listView
     }()
     
@@ -87,6 +90,11 @@ extension SFileIconsListView: UICollectionViewDelegate, UICollectionViewDataSour
         }
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let file = self.filesDataSource[indexPath.item]
+        self.fileTouchAction(indexPath: indexPath, file: file)
+    }
 }
 
 extension SFileIconsListView: SFileBrowserDelegate {
@@ -102,21 +110,3 @@ extension SFileIconsListView: SFileBrowserDelegate {
         self.delegate?.fileTouchAction(indexPath: indexPath, file: file)
     }
 }
-
-//extension SFileIconsListView: UITableViewDelegate, UITableViewDataSource {
-//
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 1
-//    }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return self.filesDataSource.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let file = self.filesDataSource[indexPath.row]
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "SFileDetailCell", for: indexPath)
-//        cell.textLabel?.text = file.fileName
-//        return cell
-//    }
-//}
