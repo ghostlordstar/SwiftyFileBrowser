@@ -22,8 +22,8 @@ public enum SFileBrowserListType: Int {
 }
 
 public class SwiftyFileBrowser: UIView {
-    private(set) var listType: SFileBrowserListType = .list
-    private(set) var files: [SFile]?
+    public private(set) var listType: SFileBrowserListType = .list
+    public private(set) var files: [SFile]?
     weak public var delegate: SFileBrowserDelegate?
     
     var listView: SFileDetailListView = {
@@ -76,11 +76,15 @@ public class SwiftyFileBrowser: UIView {
         self.listView.updateFileState(fileIdentifier: fileIdentifier, fileState: fileState)
     }
     
-    public func switchTo() {
-        self.switchTo(listType: self.listType.next())
+    /// 循环切换到下一个样式
+    /// - Parameter complete: 完成回调
+    public func switchTo(complete:((_ listType: SFileBrowserListType)->())? = nil) {
+        self.switchTo(listType: self.listType.next(), complete: complete)
     }
     
-    public func switchTo(listType: SFileBrowserListType) {
+    /// 切换到指定样式
+    /// - Parameter complete: 完成回调
+    public func switchTo(listType: SFileBrowserListType, complete:((_ listType: SFileBrowserListType)->())? = nil) {
         self.listType = listType
         switch listType {
         case .list:
@@ -97,6 +101,7 @@ public class SwiftyFileBrowser: UIView {
             self.iconsView.scrollToVisibleIndexPath(indexPath: self.listView.currentVisibleIndexPath()?.first)
             }
         }
+        complete?(listType)
     }
 }
 
