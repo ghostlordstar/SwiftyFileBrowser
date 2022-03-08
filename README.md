@@ -18,8 +18,8 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Feature
 - [x] show files with list style
-- [ ] show files with icon style
-- [ ] dynamic switch style
+- [x] show files with icon style
+- [x] dynamic switch style
 - [ ] reload list with difference algorithm  
 ## Installation
 

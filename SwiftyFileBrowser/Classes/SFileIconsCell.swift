@@ -33,8 +33,9 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
         self.contentView.addSubview(self.thumbnailImageView)
         self.contentView.addSubview(self.appIconView)
         self.contentView.addSubview(self.downloadFlag)
-        self.thumbnailImageView.addSubview(self.downloadBtn)
-        
+        self.contentView.addSubview(self.downloadMaskView)
+        self.downloadMaskView.addSubview(self.downloadBtn)
+
         self.p_layout()
     }
     
@@ -68,6 +69,11 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
         self.downloadBtn.widthAnchor.constraint(equalToConstant: 40.scale).isActive = true
         self.downloadBtn.heightAnchor.constraint(equalToConstant: 40.scale).isActive = true
         
+        self.downloadMaskView.translatesAutoresizingMaskIntoConstraints = false
+        self.downloadMaskView.centerXAnchor.constraint(equalTo: self.thumbnailImageView.centerXAnchor).isActive = true
+        self.downloadMaskView.centerYAnchor.constraint(equalTo: self.thumbnailImageView.centerYAnchor).isActive = true
+        self.downloadMaskView.widthAnchor.constraint(equalTo: self.thumbnailImageView.widthAnchor).isActive = true
+        self.downloadMaskView.heightAnchor.constraint(equalTo: self.thumbnailImageView.heightAnchor).isActive = true
     }
     
     @objc func p_downloadBtnAction() {
@@ -101,7 +107,18 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
     
     lazy var thumbnailImageView: UIImageView = {
         let thumbnailImageView = UIImageView.init()
+        thumbnailImageView.layer.cornerRadius = 4.0
+        thumbnailImageView.layer.masksToBounds = true
         return thumbnailImageView
+    }()
+    
+    lazy var downloadMaskView: UIView = {
+        let downloadMaskView = UIView.init()
+        downloadMaskView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        downloadMaskView.layer.cornerRadius = 4.0
+        downloadMaskView.layer.masksToBounds = true
+        downloadMaskView.isHidden = false
+        return downloadMaskView
     }()
     
     lazy var appIconView: UIImageView = {
@@ -117,7 +134,7 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
     }()
     
     lazy var downloadBtn: AppleDownloadButton = {
-        let downloadBtn = AppleDownloadButton.init(frame: .zero, isDownloaded: false, style: .iOS, palette: Palette.init(initialColor: .systemBlue, rippleColor: nil, buttonBackgroundColor: .clear, downloadColor: .systemBlue, deviceColor: .systemBlue))
+        let downloadBtn = AppleDownloadButton.init(frame: .zero, isDownloaded: false, style: .iOS, palette: Palette.init(initialColor: .white, rippleColor: .white.withAlphaComponent(0.6), buttonBackgroundColor: .clear, downloadColor: .white, deviceColor: .white))
         downloadBtn.delegate = self
         downloadBtn.isHidden = true
         downloadBtn.addTarget(self, action: #selector(p_downloadBtnAction), for: .touchUpInside)
@@ -144,11 +161,13 @@ extension SFileIconsCell: SFileCellSetupProtocol {
                 self.thumbnailImageView.image = self.file?.thumbnail ?? UIImage.imageNamed("icon_folder_close", bundleForClass: SFileDetailCell.self)
                 self.appIconView.image = self.file?.appIcon
                 self.downloadFlag.isHidden = true
+                self.downloadBtn.isHidden = true
+                self.downloadMaskView.isHidden = true
+                
             default:
                 self.thumbnailImageView.image = self.file?.thumbnail ?? UIImage.imageNamed("icon_file_unknow_blue", bundleForClass: SFileDetailCell.self)
                 self.appIconView.image = self.file?.appIcon
                 self.update(fileState: self.file?.state ?? .downloaded)
-                self.downloadFlag.isHidden = false
             }
         }
     }
@@ -158,25 +177,25 @@ extension SFileIconsCell: SFileCellSetupProtocol {
         case .notDownloaded:
             self.downloadFlag.isHidden = false
             self.downloadBtn.isHidden = true
-            self.thumbnailImageView.isHighlighted = false
+            self.downloadMaskView.isHidden = true
             self.downloadBtn.downloadState = .toDownload
         case .readyToDownload:
-            self.downloadFlag.isHidden = false
+            self.downloadFlag.isHidden = true
             self.downloadBtn.isHidden = false
-            self.thumbnailImageView.isHighlighted = true
+            self.downloadMaskView.isHidden = false
             self.downloadBtn.downloadState = .willDownload
         case .downloading(let progress):
-            self.downloadFlag.isHidden = false
+            self.downloadFlag.isHidden = true
             self.downloadBtn.isHidden = false
-            self.thumbnailImageView.image = (self.file?.thumbnail ?? UIImage.imageNamed("icon_file_unknow_blue", bundleForClass: SFileDetailCell.self))?.dfa_darkImage()
+            self.downloadMaskView.isHidden = false
             self.downloadBtn.downloadState = .readyToDownload
             DispatchQueue.main.async {
                 self.downloadBtn.downloadPercent = CGFloat(progress)
             }
         case .pausedDownload(let progress):
-            self.downloadFlag.isHidden = false
+            self.downloadFlag.isHidden = true
             self.downloadBtn.isHidden = true
-            self.thumbnailImageView.isHighlighted = true
+            self.downloadMaskView.isHidden = false
             self.downloadBtn.downloadState = .readyToDownload
             DispatchQueue.main.async {
                 self.downloadBtn.downloadPercent = CGFloat(progress)
@@ -184,13 +203,13 @@ extension SFileIconsCell: SFileCellSetupProtocol {
         case .downloaded:
             self.downloadFlag.isHidden = true
             self.downloadBtn.isHidden = true
+            self.downloadMaskView.isHidden = true
             self.downloadBtn.downloadState = .downloaded
-            self.thumbnailImageView.isHighlighted = false
         case .downloadError(_):
             self.downloadFlag.isHidden = false
             self.downloadBtn.isHidden = true
+            self.downloadMaskView.isHidden = true
             self.downloadBtn.downloadState = .toDownload
-            self.thumbnailImageView.isHighlighted = false
         }
     }
 }
