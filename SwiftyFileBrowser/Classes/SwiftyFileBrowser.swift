@@ -21,10 +21,24 @@ public enum SFileBrowserListType: Int {
     }
 }
 
+
 public class SwiftyFileBrowser: UIView {
     public private(set) var listType: SFileBrowserListType = .list
     public private(set) var files: [SFile]?
     weak public var delegate: SFileBrowserDelegate?
+    
+    private var _contentInsetAdjustmentBehavior: Int = 0
+    @available(iOS 11.0, *)
+    public var contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior {
+        get {
+            return UIScrollView.ContentInsetAdjustmentBehavior.init(rawValue: _contentInsetAdjustmentBehavior) ?? .automatic
+        }
+        set {
+            _contentInsetAdjustmentBehavior = newValue.rawValue
+            self.listView.listView.contentInsetAdjustmentBehavior = newValue
+            self.iconsView.listView.contentInsetAdjustmentBehavior = newValue
+        }
+    }
     
     var listView: SFileDetailListView = {
         let listView = SFileDetailListView()
@@ -53,7 +67,7 @@ public class SwiftyFileBrowser: UIView {
         self.listType = type
         self.p_setUpUI()
     }
-
+    
     func p_setUpUI() {
         self.listView.frame = self.bounds
         self.iconsView.frame = self.bounds
@@ -94,12 +108,12 @@ public class SwiftyFileBrowser: UIView {
                 self.listView.isHidden = false
                 self.listView.scrollToVisibleIndexPath(indexPath: self.iconsView.currentVisibleIndexPath()?.first)
             }
-        
+            
         case .icons:
             DispatchQueue.main.async {
-            self.listView.isHidden = true
-            self.iconsView.isHidden = false
-            self.iconsView.scrollToVisibleIndexPath(indexPath: self.listView.currentVisibleIndexPath()?.first)
+                self.listView.isHidden = true
+                self.iconsView.isHidden = false
+                self.iconsView.scrollToVisibleIndexPath(indexPath: self.listView.currentVisibleIndexPath()?.first)
             }
         }
         complete?(listType)

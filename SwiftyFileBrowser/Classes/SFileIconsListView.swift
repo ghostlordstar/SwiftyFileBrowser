@@ -20,9 +20,6 @@ class SFileIconsListView: UIView {
         listView.backgroundColor = UIColor.white
         listView.showsVerticalScrollIndicator = false
         listView.showsHorizontalScrollIndicator = false
-        if #available(iOS 11.0, *) {
-            listView.contentInsetAdjustmentBehavior = .never
-        }
         return listView
     }()
     
