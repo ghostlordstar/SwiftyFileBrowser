@@ -15,6 +15,25 @@ public enum SFileState: Equatable {
     case pausedDownload(progress: Float)// 暂停中
     case downloaded                     // 下载完成
     case downloadError(error: Error)    // 下载失败
+    
+    public static func == (lhs: SFileState, rhs: SFileState) -> Bool {
+        switch (lhs, rhs) {
+        case (.notDownloaded,.notDownloaded):
+            return true
+        case (.readyToDownload, .readyToDownload):
+            return true
+        case let (.downloading(a), .downloading(b)):
+            return a == b
+        case let (.pausedDownload(a), .pausedDownload(b)):
+            return a == b
+        case (.downloaded, .downloaded):
+            return true
+        case (.downloadError, .downloadError):
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 public enum SFileType: Equatable {
