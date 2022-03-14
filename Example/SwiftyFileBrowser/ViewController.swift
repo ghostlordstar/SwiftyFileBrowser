@@ -36,10 +36,55 @@ class ViewController: UIViewController {
         ]
         self.sfbView?.reloadBrowser(files: files)
         self.view.addSubview(self.sfbView!)
+        
+        self.testFileType()
     }
 
     @objc func p_swiftchListType() {
         self.sfbView?.switchTo()
+    }
+    
+    func testFileType() {
+        // 不相等
+        var type1: SFileType = .folder
+        var type2: SFileType = .html
+        if case type1 = type2 {
+            print("folder == html")
+        }else {
+            print("folder != html")
+        }
+        // 相等
+        type1 = .folder
+        type2 = .folder
+        if case type1 = type2 {
+            print("folder == folder")
+        }else {
+            print("folder != folder")
+        }
+        // 关联值不相等
+        type1 = .image(format: "a")
+        type2 = .image(format: "b")
+        if case type1 = type2 {
+            print("image.a == image.b")
+        }else {
+            print("image.a != image.b")
+        }
+        // 完全相等
+        type1 = .image(format: "a")
+        type2 = .image(format: "a")
+        if case type1 = type2 {
+            print("image.a == image.a")
+        }else {
+            print("image.a != image.a")
+        }
+        // 类型不相等
+        type1 = .image(format: "a")
+        type2 = .folder
+        if case type1 = type2 {
+            print("image.a == folder")
+        }else {
+            print("image.a != folder")
+        }
     }
     
     override func didReceiveMemoryWarning() {
