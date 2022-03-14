@@ -8,7 +8,7 @@
 import Foundation
 
 // 文件状态
-public enum SFileState {
+public enum SFileState: Equatable {
     case notDownloaded                  // 未下载
     case readyToDownload                // 等待下载
     case downloading(progress: Float)   // 下载进度，0.0~1.0
@@ -17,7 +17,7 @@ public enum SFileState {
     case downloadError(error: Error)    // 下载失败
 }
 
-public enum SFileType {
+public enum SFileType: Equatable {
     case folder
     case image(format: String?)
     case music(format: String?)
