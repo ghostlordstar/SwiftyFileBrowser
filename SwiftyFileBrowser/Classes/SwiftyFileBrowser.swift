@@ -11,7 +11,7 @@ public enum SFileBrowserListType: Int {
     case list       // list
     case icons      // icon
     
-    func next() -> SFileBrowserListType {
+    public func next() -> SFileBrowserListType {
         switch self {
         case .list:
             return .icons

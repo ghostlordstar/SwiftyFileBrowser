@@ -16,6 +16,7 @@ public enum SFileState: Equatable {
     case downloaded                     // 下载完成
     case downloadError(error: Error)    // 下载失败
     
+    /// ⚠️ 实现`Equatable`协议
     public static func == (lhs: SFileState, rhs: SFileState) -> Bool {
         switch (lhs, rhs) {
         case (.notDownloaded,.notDownloaded):
