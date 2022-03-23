@@ -90,9 +90,9 @@ def pushToMainAndPushSpecs():
 # 直接push到CTSpecs
 def pushToPrivateSpecs():
 
-    checkCommand = "arch -x86_64 pod lib lint %s.podspec --allow-warnings"%podName
-    pushCommand = "arch -x86_64 pod trunk push %s.podspec --allow-warnings"%podName
-    updatePirvateRepo = "arch -x86_64 pod repo update"
+    checkCommand = "pod lib lint %s.podspec --allow-warnings"%podName
+    pushCommand = "pod trunk push %s.podspec --allow-warnings"%podName
+    updatePirvateRepo = "pod repo update"
     checkRet = os.system(checkCommand)
     if checkRet != 0:
         print("校验出错，请检查spec文件是否配置正确")

@@ -37,13 +37,13 @@ public enum SFileState: Equatable {
     }
 }
 
-public enum SFileType: Equatable {
+public enum SFileType {
     case folder
-    case image(format: String?)
-    case music(format: String?)
-    case video(format: String?)
-    case text(format: String?)
-    case zip(format: String?)
+    case image
+    case music
+    case video
+    case text
+    case zip
     case html
     case pdf
     case unknow
