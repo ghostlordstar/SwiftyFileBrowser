@@ -4,10 +4,10 @@ import sys
 def selectOperator():
 
     print("")
-    print("* 1. 直接push到公共仓库")
+    print("* 1. 直接push到公共源")
     print("* 2. 提交到develop分支")
     print("* 3. 提交到main分支")
-    print("* 4. 提交到main并push到公共仓库")
+    print("* 4. 提交到main并push到公共源")
     print("")
     return
 
