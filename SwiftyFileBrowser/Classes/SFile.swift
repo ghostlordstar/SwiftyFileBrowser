@@ -37,16 +37,16 @@ public enum SFileState: Equatable {
     }
 }
 
-public enum SFileType {
+public enum SFileType: Comparable {
     case folder
     case image
-    case music
     case video
+    case music
     case text
-    case zip
-    case html
     case pdf
+    case html
     case epub
+    case zip
     case unknow
 }
 
