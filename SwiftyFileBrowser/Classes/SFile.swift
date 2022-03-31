@@ -46,6 +46,7 @@ public enum SFileType {
     case zip
     case html
     case pdf
+    case epub
     case unknow
 }
 
