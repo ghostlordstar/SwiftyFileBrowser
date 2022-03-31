@@ -92,7 +92,7 @@ def pushToPrivateSpecs():
 
     checkCommand = "pod lib lint %s.podspec --allow-warnings"%podName
     pushCommand = "pod trunk push %s.podspec --allow-warnings"%podName
-    updatePirvateRepo = "pod repo update"
+    updatePirvateRepo = "cd Example&&pod update SwiftyFileBrowser"
     checkRet = os.system(checkCommand)
     if checkRet != 0:
         print("校验出错，请检查spec文件是否配置正确")
