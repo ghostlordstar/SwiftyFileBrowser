@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'SwiftyFileBrowser'
-    s.version          = '0.2.6'
+    s.version          = '0.3.0'
     s.summary          = 'A file browser lib of swift(icon type comming soon!).'
     
     # This description is used to generate tags and improve search results.
@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
     s.source           = { :git => 'https://github.com/ghostlordstar/SwiftyFileBrowser.git', :tag => s.version.to_s }
     # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
     
-    s.ios.deployment_target = '10.0'
+    s.ios.deployment_target = '14.0'
     
     s.swift_version = "5.0"
     

@@ -34,6 +34,20 @@ class ViewController: UIViewController {
             FileObject.init(id: "1003", name: "name666", detail: "2021/09/16"),
             FileObject.init(id: "1004", name: "name666", detail: "2021/09/16"),
         ]
+        
+        // Long press Actions
+        let copyEle = UIAction.init(title: "Copy", image: nil, identifier: UIAction.Identifier.init("LongPress-Copy"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
+            print("LongPress copy event!,index: \(self.sfbView?.longPressIndex)")
+            // TODO: copy logic
+        }
+        
+        let moveEle = UIAction.init(title: "Move", image: nil, identifier: UIAction.Identifier.init("LongPress-Move"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
+            print("LongPress Move event!,index: \(self.sfbView?.longPressIndex)")
+            // TODO: Move logic
+        }
+        
+        self.sfbView?.longPressMenuElements = [copyEle, moveEle]
+        
         self.sfbView?.reloadBrowser(files: files)
         self.view.addSubview(self.sfbView!)
         

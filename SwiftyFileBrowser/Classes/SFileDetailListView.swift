@@ -11,11 +11,13 @@ class SFileDetailListView: UIView {
     
     private(set) var filesDataSource: [SFile] = [SFile]()
     weak var delegate: SFileBrowserDelegate?
+    var longPressIndexPathDidChange: ((_ indexPath: IndexPath?)->())?
+    var longPressMenuElements: [UIMenuElement]?
     
-    lazy var longPressGesture: UILongPressGestureRecognizer = {
-        let longPressGesture = UILongPressGestureRecognizer.init(target: self, action: #selector(p_longPressAction))
-        return longPressGesture
-    }()
+    //    lazy var longPressGesture: UILongPressGestureRecognizer = {
+    //        let longPressGesture = UILongPressGestureRecognizer.init(target: self, action: #selector(p_longPressAction))
+    //        return longPressGesture
+    //    }()
     
     lazy var listView: UITableView = {
         var style = UITableView.Style.plain
@@ -36,7 +38,7 @@ class SFileDetailListView: UIView {
         listView.estimatedSectionFooterHeight = 0
         listView.separatorStyle = .singleLine
         listView.separatorInset = .init(top: 0, left: 60.scale, bottom: 0, right: 0)
-        listView.addGestureRecognizer(self.longPressGesture)
+        //        listView.addGestureRecognizer(self.longPressGesture)
         return listView
     }()
     
@@ -58,16 +60,16 @@ class SFileDetailListView: UIView {
         self.listView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     }
     
-    @objc func p_longPressAction(gesture: UILongPressGestureRecognizer?) {
-        if let ges = gesture, ges.state == .began {
-            let point = ges.location(in: self.listView)
-            let indexPath = self.listView.indexPathForRow(at: point)
-            if let index = indexPath {
-                let file = self.filesDataSource[index.row]
-                self.delegate?.fileLongTouchAction(indexPath: index, file: file)
-            }
-        }
-    }
+    //    @objc func p_longPressAction(gesture: UILongPressGestureRecognizer?) {
+    //        if let ges = gesture, ges.state == .began {
+    //            let point = ges.location(in: self.listView)
+    //            let indexPath = self.listView.indexPathForRow(at: point)
+    //            if let index = indexPath {
+    //                let file = self.filesDataSource[index.row]
+    //                self.delegate?.fileLongTouchAction(indexPath: index, file: file)
+    //            }
+    //        }
+    //    }
     
     func reloadList(files: [SFile]?) {
         if let files = files {
@@ -159,15 +161,24 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? { return nil }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat { return 0.001 }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let actions = self.longPressMenuElements else { return nil }
+        self.longPressIndexPathDidChange?(indexPath)
+        let menuView = UIMenu.init(title: "", image: nil, identifier: UIMenu.Identifier.init(rawValue: "com.swiftFileBrowser.longpress.menuView"), options: UIMenu.Options.displayInline, children: actions)
+        return UIContextMenuConfiguration.init(identifier: nil, previewProvider: nil) { _ in
+            menuView
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willEndContextMenuInteraction configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
+        self.longPressIndexPathDidChange?(nil)
+    }
 }
 
 extension SFileDetailListView: SFileBrowserDelegate {
     func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileDownloadButtonAction(indexPath: indexPath, file: file)
-    }
-    
-    func fileLongTouchAction(indexPath: IndexPath?, file: SFile) {
-        self.delegate?.fileLongTouchAction(indexPath: indexPath, file: file)
     }
     
     func fileTouchAction(indexPath: IndexPath?, file: SFile) {

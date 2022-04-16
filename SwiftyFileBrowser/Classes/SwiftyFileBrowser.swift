@@ -22,11 +22,11 @@ public enum SFileBrowserListType: Int {
 }
 
 
+
 public class SwiftyFileBrowser: UIView {
     public private(set) var listType: SFileBrowserListType = .list
     public private(set) var files: [SFile]?
     weak public var delegate: SFileBrowserDelegate?
-    
     private var _contentInsetAdjustmentBehavior: Int = 0
     @available(iOS 11.0, *)
     public var contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior {
@@ -37,6 +37,14 @@ public class SwiftyFileBrowser: UIView {
             _contentInsetAdjustmentBehavior = newValue.rawValue
             self.listView.listView.contentInsetAdjustmentBehavior = newValue
             self.iconsView.listView.contentInsetAdjustmentBehavior = newValue
+        }
+    }
+    // current long press cell indexPath
+    public private(set) var longPressIndex: IndexPath?
+    public var longPressMenuElements: [UIMenuElement]? {
+        didSet {
+            self.listView.longPressMenuElements = longPressMenuElements
+            self.iconsView.longPressMenuElements = longPressMenuElements
         }
     }
     
@@ -79,6 +87,12 @@ public class SwiftyFileBrowser: UIView {
     }
     
     public func reloadBrowser(files: [SFile]?) {
+        self.listView.longPressIndexPathDidChange = { [weak self] indexPath in
+            self?.longPressIndex = indexPath
+        }
+        self.iconsView.longPressIndexPathDidChange = { [weak self] indexPath in
+            self?.longPressIndex = indexPath
+        }
         self.listView.reloadList(files: files)
         self.iconsView.reloadList(files: files)
     }
@@ -123,10 +137,6 @@ public class SwiftyFileBrowser: UIView {
 extension SwiftyFileBrowser: SFileBrowserDelegate {
     public func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileDownloadButtonAction(indexPath: indexPath, file: file)
-    }
-    
-    public func fileLongTouchAction(indexPath: IndexPath?, file: SFile) {
-        self.delegate?.fileLongTouchAction(indexPath: indexPath, file: file)
     }
     
     public func fileTouchAction(indexPath: IndexPath?, file: SFile) {

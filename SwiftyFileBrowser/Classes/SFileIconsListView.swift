@@ -11,7 +11,9 @@ class SFileIconsListView: UIView {
     
     private(set) var filesDataSource: [SFile] = [SFile]()
     weak var delegate: SFileBrowserDelegate?
-
+    var longPressIndexPathDidChange: ((_ indexPath: IndexPath?)->())?
+    var longPressMenuElements: [UIMenuElement]?
+    
     lazy var listView: UICollectionView = {
         let listView = UICollectionView.init(frame: .zero, collectionViewLayout: self.cvLayout)
         listView.delegate = self
@@ -92,15 +94,24 @@ extension SFileIconsListView: UICollectionViewDelegate, UICollectionViewDataSour
         let file = self.filesDataSource[indexPath.item]
         self.fileTouchAction(indexPath: indexPath, file: file)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let actions = self.longPressMenuElements else { return nil }
+        self.longPressIndexPathDidChange?(indexPath)
+        let menuView = UIMenu.init(title: "", image: nil, identifier: UIMenu.Identifier.init(rawValue: "com.swiftFileBrowser.longpress.menuView"), options: UIMenu.Options.displayInline, children: actions)
+        return UIContextMenuConfiguration.init(identifier: nil, previewProvider: nil) { _ in
+            menuView
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willEndContextMenuInteraction configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
+        self.longPressIndexPathDidChange?(nil)
+    }
 }
 
 extension SFileIconsListView: SFileBrowserDelegate {
     func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileDownloadButtonAction(indexPath: indexPath, file: file)
-    }
-    
-    func fileLongTouchAction(indexPath: IndexPath?, file: SFile) {
-        self.delegate?.fileLongTouchAction(indexPath: indexPath, file: file)
     }
     
     func fileTouchAction(indexPath: IndexPath?, file: SFile) {
