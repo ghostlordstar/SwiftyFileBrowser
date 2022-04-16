@@ -27,26 +27,17 @@ public class SwiftyFileBrowser: UIView {
     public private(set) var listType: SFileBrowserListType = .list
     public private(set) var files: [SFile]?
     weak public var delegate: SFileBrowserDelegate?
-    private var _contentInsetAdjustmentBehavior: Int = 0
-    @available(iOS 11.0, *)
-    public var contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior {
-        get {
-            return UIScrollView.ContentInsetAdjustmentBehavior.init(rawValue: _contentInsetAdjustmentBehavior) ?? .automatic
-        }
-        set {
-            _contentInsetAdjustmentBehavior = newValue.rawValue
-            self.listView.listView.contentInsetAdjustmentBehavior = newValue
-            self.iconsView.listView.contentInsetAdjustmentBehavior = newValue
+    var contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior? {
+        didSet {
+            if let behavior = contentInsetAdjustmentBehavior {
+                self.listView.listView.contentInsetAdjustmentBehavior = behavior
+                self.iconsView.listView.contentInsetAdjustmentBehavior = behavior
+            }
         }
     }
+    
     // current long press cell indexPath
     public private(set) var longPressIndex: IndexPath?
-    public var longPressMenuElements: [UIMenuElement]? {
-        didSet {
-            self.listView.longPressMenuElements = longPressMenuElements
-            self.iconsView.longPressMenuElements = longPressMenuElements
-        }
-    }
     
     var listView: SFileDetailListView = {
         let listView = SFileDetailListView()
@@ -87,12 +78,6 @@ public class SwiftyFileBrowser: UIView {
     }
     
     public func reloadBrowser(files: [SFile]?) {
-        self.listView.longPressIndexPathDidChange = { [weak self] indexPath in
-            self?.longPressIndex = indexPath
-        }
-        self.iconsView.longPressIndexPathDidChange = { [weak self] indexPath in
-            self?.longPressIndex = indexPath
-        }
         self.listView.reloadList(files: files)
         self.iconsView.reloadList(files: files)
     }
@@ -141,5 +126,15 @@ extension SwiftyFileBrowser: SFileBrowserDelegate {
     
     public func fileTouchAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileTouchAction(indexPath: indexPath, file: file)
+    }
+    
+    public func fileLongPressAction(indexPath: IndexPath?, file: SFile) -> UIContextMenuConfiguration? {
+        self.longPressIndex = indexPath
+        return self.delegate?.fileLongPressAction(indexPath: indexPath, file: file)
+    }
+    
+    public func fileDidEndLongPressAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileDidEndLongPressAction(indexPath: indexPath, file: file)
+        self.longPressIndex = nil
     }
 }

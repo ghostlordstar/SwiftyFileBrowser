@@ -10,7 +10,7 @@ import UIKit
 import SwiftyFileBrowser
 
 class ViewController: UIViewController {
-
+    
     var sfbView: SwiftyFileBrowser?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,71 +35,77 @@ class ViewController: UIViewController {
             FileObject.init(id: "1004", name: "name666", detail: "2021/09/16"),
         ]
         
-        // Long press Actions
-        let copyEle = UIAction.init(title: "Copy", image: nil, identifier: UIAction.Identifier.init("LongPress-Copy"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
-            print("LongPress copy event!,index: \(self.sfbView?.longPressIndex)")
-            // TODO: copy logic
-        }
+        //        // Long press Actions
+        //        let copyEle = UIAction.init(title: "Copy", image: nil, identifier: UIAction.Identifier.init("LongPress-Copy"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
+        //            print("LongPress copy event!,index: \(self.sfbView?.longPressIndex)")
+        //            // TODO: copy logic
+        //        }
+        //
+        //        let moveEle = UIAction.init(title: "Move", image: nil, identifier: UIAction.Identifier.init("LongPress-Move"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
+        //            print("LongPress Move event!,index: \(self.sfbView?.longPressIndex)")
+        //            // TODO: Move logic
+        //        }
         
-        let moveEle = UIAction.init(title: "Move", image: nil, identifier: UIAction.Identifier.init("LongPress-Move"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
-            print("LongPress Move event!,index: \(self.sfbView?.longPressIndex)")
-            // TODO: Move logic
-        }
-        
-        self.sfbView?.longPressMenuElements = [copyEle, moveEle]
+        //        self.sfbView?.longPressMenuElements = [copyEle, moveEle]
+        //
+        //        self.longPressIndexPathDidChange?(indexPath)
+        //        let menuView = UIMenu.init(title: "", image: nil, identifier: UIMenu.Identifier.init(rawValue: "com.swiftFileBrowser.longpress.menuView"), options: UIMenu.Options.displayInline, children: actions)
+        //        return UIContextMenuConfiguration.init(identifier: nil, previewProvider: nil) { _ in
+        //            menuView
+        //
         
         self.sfbView?.reloadBrowser(files: files)
         self.view.addSubview(self.sfbView!)
         
-//        self.testFileType()
+        //        self.testFileType()
     }
-
+    
     @objc func p_swiftchListType() {
         self.sfbView?.switchTo()
     }
     
-//    func testFileType() {
-//        // 不相等
-//        var type1: SFileType = .folder
-//        var type2: SFileType = .html
-//        if case type1 = type2 {
-//            print("folder == html")
-//        }else {
-//            print("folder != html")
-//        }
-//        // 相等
-//        type1 = .folder
-//        type2 = .folder
-//        if case type1 = type2 {
-//            print("folder == folder")
-//        }else {
-//            print("folder != folder")
-//        }
-//        // 关联值不相等
-//        type1 = .image(format: "a")
-//        type2 = .image(format: "b")
-//        if case type1 = type2 {
-//            print("image.a == image.b")
-//        }else {
-//            print("image.a != image.b")
-//        }
-//        // 完全相等
-//        type1 = .image(format: "a")
-//        type2 = .image(format: "a")
-//        if case type1 = type2 {
-//            print("image.a == image.a")
-//        }else {
-//            print("image.a != image.a")
-//        }
-//        // 类型不相等
-//        type1 = .image(format: "a")
-//        type2 = .folder
-//        if case type1 = type2 {
-//            print("image.a == folder")
-//        }else {
-//            print("image.a != folder")
-//        }
-//    }
+    //    func testFileType() {
+    //        // 不相等
+    //        var type1: SFileType = .folder
+    //        var type2: SFileType = .html
+    //        if case type1 = type2 {
+    //            print("folder == html")
+    //        }else {
+    //            print("folder != html")
+    //        }
+    //        // 相等
+    //        type1 = .folder
+    //        type2 = .folder
+    //        if case type1 = type2 {
+    //            print("folder == folder")
+    //        }else {
+    //            print("folder != folder")
+    //        }
+    //        // 关联值不相等
+    //        type1 = .image(format: "a")
+    //        type2 = .image(format: "b")
+    //        if case type1 = type2 {
+    //            print("image.a == image.b")
+    //        }else {
+    //            print("image.a != image.b")
+    //        }
+    //        // 完全相等
+    //        type1 = .image(format: "a")
+    //        type2 = .image(format: "a")
+    //        if case type1 = type2 {
+    //            print("image.a == image.a")
+    //        }else {
+    //            print("image.a != image.a")
+    //        }
+    //        // 类型不相等
+    //        type1 = .image(format: "a")
+    //        type2 = .folder
+    //        if case type1 = type2 {
+    //            print("image.a == folder")
+    //        }else {
+    //            print("image.a != folder")
+    //        }
+    //    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -108,12 +114,31 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: SFileBrowserDelegate {
+    func fileDidEndLongPressAction(indexPath: IndexPath?, file: SFile) {
+        print("end long press, index:\(indexPath)")
+    }
+    
     func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
         print("\(#function)")
     }
     
-    func fileLongTouchAction(indexPath: IndexPath?, file: SFile) {
-        print("\(#function)")
+    func fileLongPressAction(indexPath: IndexPath?, file: SFile) -> UIContextMenuConfiguration? {
+        
+        // Long press Actions
+        let copyEle = UIAction.init(title: "Copy", image: nil, identifier: UIAction.Identifier.init("LongPress-Copy"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
+            print("LongPress copy event!,index: \(indexPath)")
+            // TODO: copy logic
+        }
+        
+        let moveEle = UIAction.init(title: "Move", image: nil, identifier: UIAction.Identifier.init("LongPress-Move"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
+            print("LongPress Move event!,index: \(indexPath)")
+            // TODO: Move logic
+        }
+        
+        let menuView = UIMenu.init(title: "", image: nil, identifier: UIMenu.Identifier.init(rawValue: "com.swiftFileBrowser.longpress.menuView"), options: UIMenu.Options.displayInline, children: [copyEle, moveEle])
+        return UIContextMenuConfiguration.init(identifier: nil, previewProvider: nil) { _ in
+            menuView
+        }
     }
     
     func fileTouchAction(indexPath: IndexPath?, file: SFile) {

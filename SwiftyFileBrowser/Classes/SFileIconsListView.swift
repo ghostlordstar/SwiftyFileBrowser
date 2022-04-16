@@ -11,8 +11,7 @@ class SFileIconsListView: UIView {
     
     private(set) var filesDataSource: [SFile] = [SFile]()
     weak var delegate: SFileBrowserDelegate?
-    var longPressIndexPathDidChange: ((_ indexPath: IndexPath?)->())?
-    var longPressMenuElements: [UIMenuElement]?
+    var longPressIndex: IndexPath?
     
     lazy var listView: UICollectionView = {
         let listView = UICollectionView.init(frame: .zero, collectionViewLayout: self.cvLayout)
@@ -96,16 +95,16 @@ extension SFileIconsListView: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let actions = self.longPressMenuElements else { return nil }
-        self.longPressIndexPathDidChange?(indexPath)
-        let menuView = UIMenu.init(title: "", image: nil, identifier: UIMenu.Identifier.init(rawValue: "com.swiftFileBrowser.longpress.menuView"), options: UIMenu.Options.displayInline, children: actions)
-        return UIContextMenuConfiguration.init(identifier: nil, previewProvider: nil) { _ in
-            menuView
-        }
+        self.longPressIndex = indexPath
+        let file = self.filesDataSource[indexPath.row]
+        return self.delegate?.fileLongPressAction(indexPath: indexPath, file: file)
     }
     
     func collectionView(_ collectionView: UICollectionView, willEndContextMenuInteraction configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-        self.longPressIndexPathDidChange?(nil)
+        if self.longPressIndex != nil, self.longPressIndex!.item < self.filesDataSource.count {
+            let file = self.filesDataSource[self.longPressIndex!.row]
+            self.delegate?.fileDidEndLongPressAction(indexPath: self.longPressIndex, file: file)
+        }
     }
 }
 
@@ -116,5 +115,13 @@ extension SFileIconsListView: SFileBrowserDelegate {
     
     func fileTouchAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileTouchAction(indexPath: indexPath, file: file)
+    }
+    
+    func fileLongPressAction(indexPath: IndexPath?, file: SFile) -> UIContextMenuConfiguration? {
+        return self.delegate?.fileLongPressAction(indexPath: indexPath, file: file)
+    }
+    
+    func fileDidEndLongPressAction(indexPath: IndexPath?, file: SFile) {
+        self.delegate?.fileDidEndLongPressAction(indexPath: indexPath, file: file)
     }
 }
