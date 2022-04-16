@@ -8,12 +8,14 @@ File browser, file manager UI, browser by list, browser by icon,文件浏览器,
 
 ## Screen Shot
 ![Listtype](https://raw.githubusercontent.com/ghostlordstar/SwiftyFileBrowser/main/ScreenShot/st_list.png)
+![Listtype](https://raw.githubusercontent.com/ghostlordstar/SwiftyFileBrowser/main/ScreenShot/st_icons.png)
+![Listtype](https://raw.githubusercontent.com/ghostlordstar/SwiftyFileBrowser/main/ScreenShot/st_menu.png)
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
-- iOS 10.0+
+- iOS 14.0+
 - Swift 5.0+
 
 ## Feature
@@ -78,6 +80,23 @@ class FileObject: SFile {
         sfbView.reloadBrowser(files: files)
         self.view.addSubview(sfbView!)
 ```
+
+### 3. add UIMenum to longPress gestrue
+```swift
+        
+        let copyEle = UIAction.init(title: "Copy", image: nil, identifier: UIAction.Identifier.init("LongPress-Copy"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
+            print("LongPress copy event!,index: \(self.sfbView?.longPressIndex)")
+            // TODO: copy logic
+        }
+        
+        let moveEle = UIAction.init(title: "Move", image: nil, identifier: UIAction.Identifier.init("LongPress-Move"), discoverabilityTitle: nil, attributes: [], state: .off) { act in
+            print("LongPress Move event!,index: \(self.sfbView?.longPressIndex)")
+            // TODO: Move logic
+        }
+        
+        self.sfbView?.longPressMenuElements = [copyEle, moveEle]
+```
+
 ## Author
 
 Hansen, heshanzhang@outlook.com
