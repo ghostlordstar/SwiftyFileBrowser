@@ -27,7 +27,13 @@ public class SwiftyFileBrowser: UIView {
     public private(set) var listType: SFileBrowserListType = .list
     public private(set) var files: [SFile]?
     weak public var delegate: SFileBrowserDelegate?
-    var contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior? {
+    public var contentInsets: UIEdgeInsets {
+        didSet {
+            self.listView.listView.contentInset = contentInsets
+            self.iconsView.listView.contentInset = contentInsets
+        }
+    }
+    public var contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior? {
         didSet {
             if let behavior = contentInsetAdjustmentBehavior {
                 self.listView.listView.contentInsetAdjustmentBehavior = behavior
