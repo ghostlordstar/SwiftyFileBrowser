@@ -21,12 +21,18 @@ public enum SFileBrowserListType: Int {
     }
 }
 
-
-
 public class SwiftyFileBrowser: UIView {
     public private(set) var listType: SFileBrowserListType = .list
     public private(set) var files: [SFile]?
     weak public var delegate: SFileBrowserDelegate?
+    
+    weak public var scrollDelegate: SFileBrowserScrollDelegate? {
+        didSet {
+            self.listView.scrollDelegate = self
+            self.iconsView.scrollDelegate = self
+        }
+    }
+    
     public var contentInsets: UIEdgeInsets? {
         didSet {
             if let insets = contentInsets {
@@ -147,5 +153,64 @@ extension SwiftyFileBrowser: SFileBrowserDelegate {
     public func fileDidEndLongPressAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileDidEndLongPressAction(indexPath: indexPath, file: file)
         self.longPressIndex = nil
+    }
+}
+
+extension SwiftyFileBrowser: SFileBrowserScrollDelegate {
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidScroll?(scrollView)
+    }
+
+    public func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidZoom?(scrollView)
+    }
+
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewWillBeginDragging?(scrollView)
+    }
+
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        self.scrollDelegate?.scrollViewWillEndDragging?(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
+    }
+
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.scrollDelegate?.scrollViewDidEndDragging?(scrollView, willDecelerate: decelerate)
+    }
+
+    public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewWillBeginDecelerating?(scrollView)
+    }
+
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
+        self.scrollDelegate?.scrollViewDidEndDecelerating?(scrollView)
+    }
+
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidEndScrollingAnimation?(scrollView)
+    }
+
+    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return self.scrollDelegate?.viewForZooming?(in: scrollView)
+    }
+
+    public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+        self.scrollDelegate?.scrollViewWillBeginZooming?(scrollView, with: view)
+    }
+
+    public func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        self.scrollDelegate?.scrollViewDidEndZooming?(scrollView, with: view, atScale: scale)
+    }
+
+    public func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+        return self.scrollDelegate?.scrollViewShouldScrollToTop?(scrollView) ?? true
+    }
+
+    public func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidScrollToTop?(scrollView)
+    }
+
+    public func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidChangeAdjustedContentInset?(scrollView)
     }
 }

@@ -11,6 +11,7 @@ class SFileIconsListView: UIView {
     
     private(set) var filesDataSource: [SFile] = [SFile]()
     weak var delegate: SFileBrowserDelegate?
+    weak var scrollDelegate: SFileBrowserScrollDelegate?
     var longPressIndex: IndexPath?
     
     lazy var listView: UICollectionView = {
@@ -123,5 +124,64 @@ extension SFileIconsListView: SFileBrowserDelegate {
     
     func fileDidEndLongPressAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileDidEndLongPressAction(indexPath: indexPath, file: file)
+    }
+}
+
+extension SFileIconsListView: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidScroll?(scrollView)
+    }
+
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidZoom?(scrollView)
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewWillBeginDragging?(scrollView)
+    }
+
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        self.scrollDelegate?.scrollViewWillEndDragging?(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.scrollDelegate?.scrollViewDidEndDragging?(scrollView, willDecelerate: decelerate)
+    }
+
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewWillBeginDecelerating?(scrollView)
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
+        self.scrollDelegate?.scrollViewDidEndDecelerating?(scrollView)
+    }
+
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidEndScrollingAnimation?(scrollView)
+    }
+
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return self.scrollDelegate?.viewForZooming?(in: scrollView)
+    }
+
+    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+        self.scrollDelegate?.scrollViewWillBeginZooming?(scrollView, with: view)
+    }
+
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        self.scrollDelegate?.scrollViewDidEndZooming?(scrollView, with: view, atScale: scale)
+    }
+
+    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+        return self.scrollDelegate?.scrollViewShouldScrollToTop?(scrollView) ?? true
+    }
+
+    func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidScrollToTop?(scrollView)
+    }
+
+    func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
+        self.scrollDelegate?.scrollViewDidChangeAdjustedContentInset?(scrollView)
     }
 }

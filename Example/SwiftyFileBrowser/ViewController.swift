@@ -53,7 +53,7 @@ class ViewController: UIViewController {
         //        return UIContextMenuConfiguration.init(identifier: nil, previewProvider: nil) { _ in
         //            menuView
         //
-        
+        self.sfbView?.scrollDelegate = self
         self.sfbView?.reloadBrowser(files: files)
         self.view.addSubview(self.sfbView!)
         
@@ -143,5 +143,11 @@ extension ViewController: SFileBrowserDelegate {
     
     func fileTouchAction(indexPath: IndexPath?, file: SFile) {
         print("\(#function)")
+    }
+}
+
+extension ViewController: SFileBrowserScrollDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("scrollView did scroll: \(scrollView.contentOffset)")
     }
 }
