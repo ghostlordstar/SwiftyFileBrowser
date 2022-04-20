@@ -21,7 +21,8 @@ public class SFFit {
     public static let isiPhone = UIDevice.current.userInterfaceIdiom == .phone
     
     /// 是否是竖屏
-    public static let isPortrait = UIApplication.shared.statusBarOrientation == .portrait || UIApplication.shared.statusBarOrientation == .portraitUpsideDown
+//    public static let isPortrait = UIApplication.shared.statusBarOrientation == .portrait || UIApplication.shared.statusBarOrientation == .portraitUpsideDown
+    public static let isPortrait = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation.isPortrait ?? false
     
     /// 判断设备是不是异形屏
     public class var isHetero : Bool {
