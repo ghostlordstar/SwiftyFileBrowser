@@ -47,6 +47,7 @@ public enum SFileType: Comparable {
     case html
     case epub
     case zip
+    case office
     case unknow
 }
 
