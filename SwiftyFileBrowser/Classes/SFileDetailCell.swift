@@ -105,6 +105,7 @@ class SFileDetailCell: SFileBaseTableViewCell {
     
     lazy var thumbnailImageView: UIImageView = {
         let thumbnailImageView = UIImageView.init()
+        thumbnailImageView.contentMode = .scaleAspectFit
         return thumbnailImageView
     }()
     

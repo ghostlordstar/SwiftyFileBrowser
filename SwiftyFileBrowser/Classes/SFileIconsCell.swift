@@ -109,6 +109,7 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
         let thumbnailImageView = UIImageView.init()
         thumbnailImageView.layer.cornerRadius = 4.0
         thumbnailImageView.layer.masksToBounds = true
+        thumbnailImageView.contentMode = .scaleAspectFit
         return thumbnailImageView
     }()
     
