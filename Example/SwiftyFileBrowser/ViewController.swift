@@ -12,12 +12,16 @@ import SwiftyFileBrowser
 class ViewController: UIViewController {
     
     var sfbView: SwiftyFileBrowser?
+    var files: [FileObject] = [FileObject]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.refresh, target: self, action: #selector(p_swiftchListType))
+        let switchItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.undo, target: self, action: #selector(p_swiftchListType))
+        let refreshItem = UIBarButtonItem.init(barButtonSystemItem: .refresh, target: self, action: #selector(p_refreshList))
+        self.navigationItem.rightBarButtonItems = [switchItem, refreshItem]
         self.sfbView = SwiftyFileBrowser.init(frame: CGRect.init(x: 0, y: SFFit.navWithStatusBarHeight, width: SFFit.width, height: SFFit.height - SFFit.navWithStatusBarHeight), type: .icons)
         self.sfbView?.delegate = self
-        let files = [
+        self.files = [
             FileObject.init(id: "111", type: .folder, name: "name111434534534534523423535436346awefasdfas", detail: "2021/09/11-asdgsfgfadsfadfadfasdfadfadfadfadf"),
             FileObject.init(id: "222", name: "name222", detail: "2021/09/13"),
             FileObject.init(id: "333", name: "name333", detail: "2021/09/14"),
@@ -54,7 +58,7 @@ class ViewController: UIViewController {
         //            menuView
         //
         self.sfbView?.scrollDelegate = self
-        self.sfbView?.reloadBrowser(files: files)
+        self.sfbView?.reloadBrowser(files: self.files)
         self.view.addSubview(self.sfbView!)
         
         //        self.testFileType()
@@ -62,6 +66,10 @@ class ViewController: UIViewController {
     
     @objc func p_swiftchListType() {
         self.sfbView?.switchTo()
+    }
+    
+    @objc func p_refreshList() {
+        self.sfbView?.reloadBrowser(files: self.files)
     }
     
     //    func testFileType() {

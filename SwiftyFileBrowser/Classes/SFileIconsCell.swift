@@ -26,6 +26,16 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.titleLabel.text = ""
+        self.detailLabel.text = ""
+        self.thumbnailImageView.image = nil
+        self.appIconView.image = nil
+        self.downloadBtn.isHidden = true
+        self.downloadMaskView.isHidden = true
+    }
+    
     func p_setUpUI() {
         
         self.contentView.addSubview(self.titleLabel)
@@ -35,7 +45,7 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
         self.contentView.addSubview(self.downloadFlag)
         self.contentView.addSubview(self.downloadMaskView)
         self.downloadMaskView.addSubview(self.downloadBtn)
-
+        
         self.p_layout()
     }
     
