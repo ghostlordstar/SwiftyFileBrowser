@@ -36,6 +36,18 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
         self.downloadMaskView.isHidden = true
     }
     
+    override var isEditing: Bool {
+        didSet {
+            self.selectedBtn.isHidden = !self.isEditing
+        }
+    }
+    
+    override var isSelected: Bool {
+        didSet {
+            self.selectedBtn.setImage(UIImage.init(systemName: self.isSelected ? "checkmark.circle.fill" : "circle" ), for: .normal)
+        }
+    }
+    
     func p_setUpUI() {
         
         self.contentView.addSubview(self.titleLabel)
@@ -45,6 +57,10 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
         self.contentView.addSubview(self.downloadFlag)
         self.contentView.addSubview(self.downloadMaskView)
         self.downloadMaskView.addSubview(self.downloadBtn)
+        self.contentView.addSubview(self.selectedBtn)
+        
+        self.tintColor = UIColor.darkGray
+        
         
         self.p_layout()
     }
@@ -84,6 +100,12 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
         self.downloadMaskView.centerYAnchor.constraint(equalTo: self.thumbnailImageView.centerYAnchor).isActive = true
         self.downloadMaskView.widthAnchor.constraint(equalTo: self.thumbnailImageView.widthAnchor).isActive = true
         self.downloadMaskView.heightAnchor.constraint(equalTo: self.thumbnailImageView.heightAnchor).isActive = true
+        
+        self.selectedBtn.translatesAutoresizingMaskIntoConstraints = false
+        self.selectedBtn.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: 0.scale).isActive = true
+        self.selectedBtn.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 0.scale).isActive = true
+        self.selectedBtn.widthAnchor.constraint(equalToConstant: 26.scale).isActive = true
+        self.selectedBtn.heightAnchor.constraint(equalToConstant: 26.scale).isActive = true
     }
     
     @objc func p_downloadBtnAction() {
@@ -150,6 +172,16 @@ class SFileIconsCell: SFileBaseCollectionViewCell {
         downloadBtn.isHidden = true
         downloadBtn.addTarget(self, action: #selector(p_downloadBtnAction), for: .touchUpInside)
         return downloadBtn
+    }()
+    
+    lazy var selectedBtn: UIButton = {
+        let selectedBtn = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 26.scale, height: 26.scale))
+        selectedBtn.setImage(UIImage.init(systemName: "circle"), for: .normal)
+        selectedBtn.contentVerticalAlignment = .fill
+        selectedBtn.contentHorizontalAlignment = .fill
+        selectedBtn.isHidden = true
+        selectedBtn.isUserInteractionEnabled = false
+        return selectedBtn
     }()
 }
 

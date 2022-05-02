@@ -11,5 +11,5 @@ open class SFileBaseCollectionViewCell: UICollectionViewCell {
     open var indexPath: IndexPath?
     open var file: SFile?
     open weak var delegate: SFileBrowserDelegate?
-
+    open var isEditing: Bool = false
 }

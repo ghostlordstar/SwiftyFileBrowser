@@ -13,18 +13,15 @@ class SFileDetailListView: UIView {
     weak var delegate: SFileBrowserDelegate?
     weak var scrollDelegate: SFileBrowserScrollDelegate?
     var longPressIndex: IndexPath?
-    
+    var isEditing: Bool = false
+    var indexPathsForSelectedItems: [IndexPath]?
+
     lazy var listView: UITableView = {
-        var style = UITableView.Style.plain
-        if #available(iOS 13.0, *) {
-            style = UITableView.Style.insetGrouped
-        } else {
-            style = UITableView.Style.grouped
-        }
-        let listView = UITableView.init(frame: .zero, style: style)
+        let listView = UITableView.init(frame: .zero, style: .insetGrouped)
         listView.delegate = self
         listView.dataSource = self
         listView.register(SFileDetailCell.self, forCellReuseIdentifier: SFileDetailCell.identifierOfCell())
+        listView.allowsMultipleSelectionDuringEditing = true
         listView.backgroundColor = UIColor.white
         listView.showsVerticalScrollIndicator = false
         listView.showsHorizontalScrollIndicator = false
@@ -69,6 +66,25 @@ class SFileDetailListView: UIView {
                 oldFile.copyFromFile(file: file)
                 self.updateListCell(index: index)
                 return
+            }
+        }
+    }
+    
+    /// 更新已经被 选中的位置
+    /// - Parameter indexPathSet: 已经被选中的位置
+    func updateSelectionsIndexPaths(indexPathSet: [IndexPath]?) {
+        guard let indexPathSet = indexPathSet else { return }
+        self.indexPathsForSelectedItems = indexPathSet
+        for indexPath in self.indexPathsForSelectedItems! {
+            self.listView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        }
+    }
+    
+    func setEditing(_ editing: Bool, animated: Bool = true) {
+        if editing != self.isEditing {
+            self.isEditing = editing
+            DispatchQueue.main.async {
+                self.listView.setEditing(editing, animated: animated)
             }
         }
     }
@@ -129,8 +145,21 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let file = self.filesDataSource[indexPath.row]
-        self.fileTouchAction(indexPath: indexPath, file: file)
+        if self.isEditing == true {
+            self.indexPathsForSelectedItems = tableView.indexPathsForSelectedRows
+            self.delegate?.fileMultipleSelection(indexPath: indexPath, indexPathSet: self.indexPathsForSelectedItems)
+        }else {
+            let file = self.filesDataSource[indexPath.row]
+            self.fileTouchAction(indexPath: indexPath, file: file)
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if self.isEditing == true {
+            self.indexPathsForSelectedItems = tableView.indexPathsForSelectedRows
+            self.delegate?.fileMultipleSelection(indexPath: indexPath, indexPathSet: self.indexPathsForSelectedItems)
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -146,15 +175,29 @@ extension SFileDetailListView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat { return 0.001 }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let file = self.filesDataSource[indexPath.row]
-        return self.delegate?.fileLongPressAction(indexPath: indexPath, file: file)
+        if self.isEditing == false {
+            let file = self.filesDataSource[indexPath.row]
+            return self.delegate?.fileLongPressAction(indexPath: indexPath, file: file)
+        }else {
+            return nil
+        }
     }
     
     func tableView(_ tableView: UITableView, willEndContextMenuInteraction configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-        if self.longPressIndex != nil, self.longPressIndex!.item < self.filesDataSource.count {
-            let file = self.filesDataSource[self.longPressIndex!.row]
-            self.delegate?.fileDidEndLongPressAction(indexPath: self.longPressIndex, file: file)
+        if self.isEditing == false {
+            if self.longPressIndex != nil, self.longPressIndex!.item < self.filesDataSource.count {
+                let file = self.filesDataSource[self.longPressIndex!.row]
+                self.delegate?.fileDidEndLongPressAction(indexPath: self.longPressIndex, file: file)
+            }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return UITableViewCell.EditingStyle.init(rawValue: UITableViewCell.EditingStyle.delete.rawValue | UITableViewCell.EditingStyle.insert.rawValue)!
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
 }
 
@@ -232,5 +275,9 @@ extension SFileDetailListView: SFileBrowserDelegate {
     
     func fileDidEndLongPressAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileDidEndLongPressAction(indexPath: indexPath, file: file)
+    }
+    
+    func fileMultipleSelection(indexPath: IndexPath?, indexPathSet: [IndexPath]?) {
+        self.delegate?.fileMultipleSelection(indexPath: indexPath, indexPathSet: indexPathSet)
     }
 }

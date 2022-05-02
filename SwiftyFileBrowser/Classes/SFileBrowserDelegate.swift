@@ -12,4 +12,5 @@ public protocol SFileBrowserDelegate: AnyObject {
     func fileTouchAction(indexPath: IndexPath?, file: SFile)            // touch
     func fileLongPressAction(indexPath: IndexPath?, file: SFile) -> UIContextMenuConfiguration? // long press
     func fileDidEndLongPressAction(indexPath: IndexPath?, file: SFile)   // long press end
+    func fileMultipleSelection(indexPath: IndexPath?, indexPathSet: [IndexPath]?) // multipleSelection
 }

@@ -23,10 +23,9 @@ class SFileDetailCell: SFileBaseTableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-    
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
     }
     
     override func prepareForReuse() {
@@ -40,7 +39,6 @@ class SFileDetailCell: SFileBaseTableViewCell {
     }
     
     func p_setUpUI() {
-        self.selectionStyle = .none
         
         self.contentView.addSubview(self.titleLabel)
         self.contentView.addSubview(self.detailLabel)
@@ -48,13 +46,17 @@ class SFileDetailCell: SFileBaseTableViewCell {
         self.contentView.addSubview(self.appIconView)
         self.contentView.addSubview(self.downloadBtn)
         
+        let bgView = UIView.init()
+        bgView.backgroundColor = .clear
+        self.selectedBackgroundView = bgView
+        self.tintColor = UIColor.darkGray
         p_layout()
     }
     
     func p_layout() {
-        
+       
         self.thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
-        self.thumbnailImageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 5.scale).isActive = true
+        self.thumbnailImageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 10.scale).isActive = true
         self.thumbnailImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
         self.thumbnailImageView.widthAnchor.constraint(equalToConstant: 44.scale).isActive = true
         self.thumbnailImageView.heightAnchor.constraint(equalToConstant: 44.scale).isActive = true
@@ -64,13 +66,13 @@ class SFileDetailCell: SFileBaseTableViewCell {
         self.titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 0.scale).isActive = true
         self.titleLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -45.scale).isActive = true
         self.titleLabel.heightAnchor.constraint(equalToConstant: 20.scale).isActive = true
-        
+
         self.detailLabel.translatesAutoresizingMaskIntoConstraints = false
         self.detailLabel.leftAnchor.constraint(equalTo: self.thumbnailImageView.rightAnchor, constant: 5.scale).isActive = true
         self.detailLabel.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 5.scale).isActive = true
         self.detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -45.scale).isActive = true
         self.detailLabel.heightAnchor.constraint(equalToConstant: 16.scale).isActive = true
-        
+
         self.downloadBtn.translatesAutoresizingMaskIntoConstraints = false
         self.downloadBtn.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 0).isActive = true
         self.downloadBtn.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -5.scale).isActive = true

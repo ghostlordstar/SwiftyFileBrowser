@@ -24,7 +24,10 @@ public enum SFileBrowserListType: Int {
 public class SwiftyFileBrowser: UIView {
     public private(set) var listType: SFileBrowserListType = .list
     public private(set) var files: [SFile]?
+    public var isEditing: Bool = false
     weak public var delegate: SFileBrowserDelegate?
+    public var indexPathsForSelectedItems: [IndexPath]?
+    
     
     weak public var scrollDelegate: SFileBrowserScrollDelegate? {
         didSet {
@@ -113,6 +116,15 @@ public class SwiftyFileBrowser: UIView {
         self.switchTo(listType: self.listType.next(), complete: complete)
     }
     
+    /// 进入编辑状态
+    /// - Parameter animated: 是否带有动画
+    public func setediting(_ editing: Bool, animated: Bool? = true) {
+        self.indexPathsForSelectedItems = [IndexPath]()
+        self.isEditing = editing
+        self.listView.setEditing(editing, animated: animated ?? true)
+        self.iconsView.setEditing(editing, animated: animated ?? true)
+    }
+    
     /// 切换到指定样式
     /// - Parameter complete: 完成回调
     public func switchTo(listType: SFileBrowserListType, complete:((_ listType: SFileBrowserListType)->())? = nil) {
@@ -122,6 +134,7 @@ public class SwiftyFileBrowser: UIView {
             DispatchQueue.main.async {
                 self.iconsView.isHidden = true
                 self.listView.isHidden = false
+                self.listView.updateSelectionsIndexPaths(indexPathSet: self.indexPathsForSelectedItems)
                 self.listView.scrollToVisibleIndexPath(indexPath: self.iconsView.currentVisibleIndexPath()?.first)
             }
             
@@ -129,9 +142,11 @@ public class SwiftyFileBrowser: UIView {
             DispatchQueue.main.async {
                 self.listView.isHidden = true
                 self.iconsView.isHidden = false
+                self.iconsView.updateSelectionsIndexPaths(indexPathSet: self.indexPathsForSelectedItems)
                 self.iconsView.scrollToVisibleIndexPath(indexPath: self.listView.currentVisibleIndexPath()?.first)
             }
         }
+        
         complete?(listType)
     }
 }
@@ -153,6 +168,11 @@ extension SwiftyFileBrowser: SFileBrowserDelegate {
     public func fileDidEndLongPressAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileDidEndLongPressAction(indexPath: indexPath, file: file)
         self.longPressIndex = nil
+    }
+    
+    public func fileMultipleSelection(indexPath: IndexPath?, indexPathSet: [IndexPath]?) {
+        self.delegate?.fileMultipleSelection(indexPath: indexPath, indexPathSet: indexPathSet)
+        self.indexPathsForSelectedItems = indexPathSet
     }
 }
 

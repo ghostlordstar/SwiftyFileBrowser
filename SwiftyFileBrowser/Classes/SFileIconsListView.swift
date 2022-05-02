@@ -13,6 +13,8 @@ class SFileIconsListView: UIView {
     weak var delegate: SFileBrowserDelegate?
     weak var scrollDelegate: SFileBrowserScrollDelegate?
     var longPressIndex: IndexPath?
+    var isEditing: Bool = false
+    var indexPathsForSelectedItems: [IndexPath]?
     
     lazy var listView: UICollectionView = {
         let listView = UICollectionView.init(frame: .zero, collectionViewLayout: self.cvLayout)
@@ -20,6 +22,8 @@ class SFileIconsListView: UIView {
         listView.dataSource = self
         listView.register(SFileIconsCell.self, forCellWithReuseIdentifier: SFileIconsCell.className)
         listView.backgroundColor = UIColor.white
+        listView.allowsMultipleSelection = true
+        listView.allowsMultipleSelectionDuringEditing = true
         listView.showsVerticalScrollIndicator = false
         listView.showsHorizontalScrollIndicator = false
         return listView
@@ -60,6 +64,28 @@ class SFileIconsListView: UIView {
         }
     }
     
+    
+    func setEditing(_ editing: Bool, animated: Bool = true) {
+        if editing != self.isEditing {
+            self.isEditing = editing
+            DispatchQueue.main.async {
+                self.listView.isEditing = editing
+                self.listView.reloadData()
+            }
+        }
+    }
+    
+    
+    /// 更新已经被 选中的位置
+    /// - Parameter indexPathSet: 已经被选中的位置
+    func updateSelectionsIndexPaths(indexPathSet: [IndexPath]?) {
+        guard let indexPathSet = indexPathSet else { return }
+        self.indexPathsForSelectedItems = indexPathSet
+        for indexPath in self.indexPathsForSelectedItems! {
+            self.listView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredVertically)
+        }
+    }
+    
     func currentVisibleIndexPath() -> [IndexPath]? {
         return self.listView.indexPathsForVisibleItems;
     }
@@ -69,7 +95,6 @@ class SFileIconsListView: UIView {
             self.listView.scrollToItem(at: indexPath, at: [], animated: animated)
         }
     }
-    
 }
 
 extension SFileIconsListView: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -83,6 +108,7 @@ extension SFileIconsListView: UICollectionViewDelegate, UICollectionViewDataSour
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SFileIconsCell.className, for: indexPath)
         if let sfileCell = cell as? SFileBaseCollectionViewCell {
             sfileCell.delegate = self
+            sfileCell.isEditing = self.isEditing
         }
         if let sfileCell = cell as? SFileCellSetupProtocol {
             sfileCell.setupCell(indexPath: indexPath, file: file)
@@ -91,25 +117,52 @@ extension SFileIconsListView: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let file = self.filesDataSource[indexPath.item]
-        self.fileTouchAction(indexPath: indexPath, file: file)
+        
+        if self.isEditing {
+            self.indexPathsForSelectedItems = collectionView.indexPathsForSelectedItems
+            self.delegate?.fileMultipleSelection(indexPath: indexPath, indexPathSet: self.indexPathsForSelectedItems)
+        }else {
+            let file = self.filesDataSource[indexPath.item]
+            self.fileTouchAction(indexPath: indexPath, file: file)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if self.isEditing {
+            self.indexPathsForSelectedItems = collectionView.indexPathsForSelectedItems
+            self.delegate?.fileMultipleSelection(indexPath: indexPath, indexPathSet: self.indexPathsForSelectedItems)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        self.longPressIndex = indexPath
-        let file = self.filesDataSource[indexPath.row]
-        return self.delegate?.fileLongPressAction(indexPath: indexPath, file: file)
+        if self.isEditing == false {
+            self.longPressIndex = indexPath
+            let file = self.filesDataSource[indexPath.row]
+            return self.delegate?.fileLongPressAction(indexPath: indexPath, file: file)
+        }else {
+            return nil
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, willEndContextMenuInteraction configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-        if self.longPressIndex != nil, self.longPressIndex!.item < self.filesDataSource.count {
-            let file = self.filesDataSource[self.longPressIndex!.row]
-            self.delegate?.fileDidEndLongPressAction(indexPath: self.longPressIndex, file: file)
+        if self.isEditing == false {
+            if self.longPressIndex != nil, self.longPressIndex!.item < self.filesDataSource.count {
+                let file = self.filesDataSource[self.longPressIndex!.row]
+                self.delegate?.fileDidEndLongPressAction(indexPath: self.longPressIndex, file: file)
+            }
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, canEditItemAt indexPath: IndexPath) -> Bool {
+        return true
     }
 }
 
 extension SFileIconsListView: SFileBrowserDelegate {
+    func fileMultipleSelection(indexPath: IndexPath?, indexPathSet: [IndexPath]?) {
+        self.delegate?.fileMultipleSelection(indexPath: indexPath, indexPathSet: indexPathSet)
+    }
+    
     func fileDownloadButtonAction(indexPath: IndexPath?, file: SFile) {
         self.delegate?.fileDownloadButtonAction(indexPath: indexPath, file: file)
     }
