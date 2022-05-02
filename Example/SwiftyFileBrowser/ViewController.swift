@@ -16,9 +16,10 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let switchItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.undo, target: self, action: #selector(p_swiftchListType))
+        let switchItem = UIBarButtonItem.init(title: "切换", style: .plain, target: self, action: #selector(p_swiftchListType))
         let refreshItem = UIBarButtonItem.init(barButtonSystemItem: .refresh, target: self, action: #selector(p_refreshList))
-        self.navigationItem.rightBarButtonItems = [switchItem, refreshItem]
+        let selectItem = UIBarButtonItem.init(barButtonSystemItem: .edit, target: self, action: #selector(p_selectAction))
+        self.navigationItem.rightBarButtonItems = [switchItem, refreshItem, selectItem]
         self.sfbView = SwiftyFileBrowser.init(frame: CGRect.init(x: 0, y: SFFit.navWithStatusBarHeight, width: SFFit.width, height: SFFit.height - SFFit.navWithStatusBarHeight), type: .icons)
         self.sfbView?.delegate = self
         self.files = [
@@ -72,6 +73,10 @@ class ViewController: UIViewController {
         self.sfbView?.reloadBrowser(files: self.files)
     }
     
+    @objc func p_selectAction() {
+        self.sfbView?.setediting(!self.sfbView!.isEditing, animated: true)
+    }
+    
     //    func testFileType() {
     //        // 不相等
     //        var type1: SFileType = .folder
@@ -122,6 +127,10 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: SFileBrowserDelegate {
+    func fileMultipleSelection(indexPath: IndexPath?, indexPathSet: [IndexPath]?) {
+        print("multipleSelction:\(indexPathSet)")
+    }
+    
     func fileDidEndLongPressAction(indexPath: IndexPath?, file: SFile) {
         print("end long press, index:\(indexPath)")
     }
